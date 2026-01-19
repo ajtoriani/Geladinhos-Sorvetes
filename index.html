@@ -10,15 +10,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
+        /* --- CSS VARIABLES & RESET --- */
         :root {
             --bg-body: #F0F4F8;
             --bg-card: #FFFFFF;
-            --primary: #FFC312;
-            --secondary: #EA2027;
+            --primary: #FFC312; /* Amarelo Gema */
+            --secondary: #EA2027; /* Vermelho */
             --text-main: #2d3436;
             --text-muted: #636e72;
             --success-bg: #dff9fb;
@@ -38,6 +40,7 @@
             line-height: 1.6;
             padding-bottom: 120px;
             
+            /* Background Orgânico / Verão */
             background-image: 
                 radial-gradient(circle at 0% 0%, rgba(255, 242, 0, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 100% 50%, rgba(0, 184, 255, 0.1) 0%, transparent 50%),
@@ -49,11 +52,13 @@
         h1, h2, h3 { font-family: var(--font-heading); color: var(--text-main); }
         .container { max-width: 480px; margin: 0 auto; padding: 0 20px; }
 
-        /* HEADER & STATUS */
+        /* --- HEADER & STATUS --- */
         header { text-align: center; padding: 40px 0 10px; }
         .logo { font-size: 2.5rem; line-height: 1.1; margin-bottom: 5px; color: var(--secondary); text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
         .highlight { color: var(--primary); -webkit-text-stroke: 1px #e1b12c; }
+        .tagline { color: var(--text-muted); font-size: 1rem; margin-bottom: 15px; }
         
+        /* Badge de Horário */
         .status-badge {
             display: inline-flex; align-items: center; gap: 6px;
             background: white; padding: 6px 14px; border-radius: 20px;
@@ -66,7 +71,7 @@
         .status-closed .status-dot { background: #EA2027; }
         .status-closed { color: #EA2027; }
 
-        /* SEARCH BAR */
+        /* --- BUSCA --- */
         .search-container { position: relative; margin-bottom: 20px; }
         .search-input {
             width: 100%; padding: 14px 16px 14px 48px;
@@ -80,7 +85,7 @@
             color: var(--text-muted); font-size: 1.3rem;
         }
 
-        /* NAV */
+        /* --- CATEGORIAS --- */
         .category-nav { display: flex; gap: 12px; overflow-x: auto; padding: 10px 20px 20px; margin: 0 -20px; scrollbar-width: none; }
         .category-nav::-webkit-scrollbar { display: none; }
         .filter-btn {
@@ -91,7 +96,7 @@
         }
         .filter-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 4px 10px rgba(234, 32, 39, 0.3); }
 
-        /* MENU CARDS */
+        /* --- MENU --- */
         .menu-section { margin-bottom: 30px; }
         .section-title { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; margin-bottom: 16px; color: var(--text-main); border-left: 5px solid var(--primary); padding-left: 12px; }
         .product-list { display: flex; flex-direction: column; gap: 12px; }
@@ -107,6 +112,7 @@
         .product-info h3 { font-size: 1.1rem; margin-bottom: 4px; color: var(--text-main); line-height: 1.2; }
         .product-price { font-weight: 700; color: var(--secondary); font-size: 1.1rem; font-family: var(--font-heading); }
 
+        /* Badges */
         .badge-tag {
             display: inline-block; font-size: 0.7rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; margin-bottom: 4px;
             text-transform: uppercase; letter-spacing: 0.5px;
@@ -114,7 +120,7 @@
         .badge-best { background: #FFC312; color: #5a4b08; }
         .badge-new { background: #4ECDC4; color: #164b46; }
 
-        /* QUANTITY */
+        /* Controles de Quantidade */
         .quantity-controls {
             display: flex; align-items: center; gap: 10px;
             background: #f1f2f6; border-radius: 50px; padding: 4px;
@@ -131,10 +137,10 @@
         .qty-display { font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; width: 24px; text-align: center; color: var(--text-main); }
         .qty-display.hidden { opacity: 0.3; }
 
-        /* CONTATO EXTRA & FOOTER */
+        /* --- CONTACT CARD --- */
         .contact-card {
             background: #dff9fb; border-radius: var(--radius); padding: 20px; text-align: center;
-            margin-bottom: 20px; border: 1px solid #c7ecee;
+            margin-bottom: 20px; border: 1px solid #c7ecee; position: relative; z-index: 2;
         }
         .contact-btn {
             display: inline-flex; align-items: center; gap: 8px;
@@ -144,13 +150,23 @@
         }
         .contact-btn:hover { transform: scale(1.05); }
 
+        /* --- LOCATION CARD (NO MAP API) --- */
         .location-card {
             background: white; border-radius: var(--radius); padding: 24px; text-align: center;
             color: var(--text-main); border: 2px dashed #b2bec3; position: relative; z-index: 2;
         }
-        .location-card i { font-size: 2rem; margin-bottom: 10px; color: var(--secondary); }
+        .location-card i.ph-map-pin { font-size: 2rem; margin-bottom: 10px; color: var(--secondary); }
         
-        /* ORDER BAR */
+        .map-actions { display: flex; gap: 10px; justify-content: center; margin: 15px 0; }
+        
+        .action-btn {
+            text-decoration: none; background: #f1f2f6; padding: 8px 16px; border-radius: 8px; 
+            font-size: 0.9rem; color: #2d3436; font-weight: bold; display: flex; align-items: center; gap: 6px; 
+            border: 1px solid #dfe6e9; cursor: pointer; transition: background 0.2s;
+        }
+        .action-btn:hover { background: #dfe6e9; }
+
+        /* --- ORDER BAR --- */
         .order-bar {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%);
             width: 90%; max-width: 440px;
@@ -172,6 +188,7 @@
     <div class="container">
         <header>
             <div class="logo">🍦<br>Geladinhos<br><span class="highlight">& Sorvetes</span></div>
+            <p class="tagline">Refrescância Pura & Sabores Artesanais</p>
             
             <div id="store-status" class="status-badge">
                 <span class="status-dot"></span> <span id="status-text">Verificando...</span>
@@ -220,7 +237,24 @@
         <div class="location-card">
             <i class="ph ph-map-pin"></i>
             <h3>Retirada</h3>
-            <p class="address-text">Av. Vereador Antônio Grotkowski, 332<br>Vila Santa Maria - Guarulhos/SP</p>
+            <p class="address-text">
+                Av. Vereador Antônio Grotkowski, 332<br>
+                Vila Santa Maria - Guarulhos/SP
+            </p>
+            
+            <div class="map-actions">
+                <a href="https://www.google.com/maps/search/?api=1&query=Av.+Vereador+Antônio+Grotkowski,+332+-+Vila+Santa+Maria,+Guarulhos" 
+                   target="_blank" class="action-btn">
+                   <i class="ph ph-map-trifold" style="font-size: 1.2rem; color: #EA2027; margin:0;"></i> 
+                   Ver Rota
+                </a>
+
+                <button onclick="copyAddress()" class="action-btn">
+                   <i class="ph ph-copy" style="font-size: 1.2rem; color: #0984e3; margin:0;"></i>
+                   Copiar
+                </button>
+            </div>
+
             <hr style="border: 0; border-top: 1px dashed #dfe6e9; margin: 10px 0;">
             <p style="font-size: 0.9rem; color: var(--secondary); font-weight: bold;">CAMPAINHA CASA 2 🔔</p>
         </div>
@@ -236,6 +270,7 @@
     </a>
 
     <script>
+        // CONFIGURAÇÕES
         const WHATSAPP_NUMBER = "5511986028635"; 
 
         const menuData = {
@@ -275,6 +310,7 @@
 
         let cart = {}; 
 
+        // --- INICIALIZAÇÃO ---
         function init() {
             renderItems('list-suco', menuData.suco);
             renderItems('list-natural', menuData.natural);
@@ -284,6 +320,7 @@
             loadCart(); 
         }
 
+        // --- RENDERIZAÇÃO ---
         function renderItems(listId, data) {
             const list = document.getElementById(listId);
             list.innerHTML = data.flavors.map(item => {
@@ -308,6 +345,7 @@
             `}).join('');
         }
 
+        // --- LÓGICA DO CARRINHO ---
         function updateQty(flavor, safeId, price, change) {
             if (!cart[flavor]) cart[flavor] = { qty: 0, price: price };
             cart[flavor].qty += change;
@@ -335,6 +373,7 @@
             }
         }
 
+        // --- LOCAL STORAGE ---
         function saveCart() { localStorage.setItem('iceCreamCart', JSON.stringify(cart)); }
 
         function loadCart() {
@@ -349,6 +388,7 @@
             }
         }
 
+        // --- BARRA FLUTUANTE ---
         function updateOrderBar() {
             let total = 0; let count = 0;
             for (let item in cart) {
@@ -382,22 +422,29 @@
             document.getElementById('whatsapp-link').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
         }
 
+        // --- HORÁRIO (13h - 20h) ---
         function checkOpeningHours() {
+            // Força timezone de SP para consistência
             const now = new Date();
-            const hour = now.getHours();
+            const spTime = now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" });
+            const currentHour = new Date(spTime).getHours();
+            
             const badge = document.getElementById('store-status');
             const text = document.getElementById('status-text');
-            const isOpen = hour >= 9 && hour < 20;
+
+            // Regra: Aberto das 13h as 20h
+            const isOpen = currentHour >= 13 && currentHour < 20;
 
             if (isOpen) {
                 badge.classList.add('status-open');
                 text.innerText = "Aberto agora";
             } else {
                 badge.classList.add('status-closed');
-                text.innerText = "Fechado (Abre às 09h)";
+                text.innerText = "Fechado (Abre às 13h)";
             }
         }
 
+        // --- UTILS: BUSCA, FILTRO E CÓPIA ---
         function searchMenu() {
             const query = document.getElementById('search-input').value.toLowerCase();
             const cards = document.querySelectorAll('.product-card');
@@ -429,6 +476,16 @@
                 });
                 gsap.to(sections, { opacity: 1, duration: 0.3 });
             }});
+        }
+
+        function copyAddress() {
+            const address = "Av. Vereador Antônio Grotkowski, 332 - Vila Santa Maria, Guarulhos";
+            navigator.clipboard.writeText(address).then(() => {
+                // Feedback visual simples
+                alert("Endereço copiado para a área de transferência! 😉");
+            }).catch(err => {
+                console.error('Erro ao copiar', err);
+            });
         }
 
         init();
