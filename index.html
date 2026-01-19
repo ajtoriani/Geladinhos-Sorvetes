@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geladinhos & Sorvetes Gourmet</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍦</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --bg-body: #F0F4F8;
+            --bg-card: #FFFFFF;
+            --primary: #FFC312;
+            --secondary: #EA2027;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --success-bg: #dff9fb;
+            --success-border: #2bad60;
+            --font-heading: 'Fredoka', sans-serif;
+            --font-body: 'Nunito', sans-serif;
+            --radius: 16px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08); 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            padding-bottom: 120px;
+            
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(255, 242, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 50%, rgba(0, 184, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(255, 107, 107, 0.1) 0%, transparent 50%);
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        h1, h2, h3 { font-family: var(--font-heading); color: var(--text-main); }
+        .container { max-width: 480px; margin: 0 auto; padding: 0 20px; }
+
+        /* HEADER & STATUS */
+        header { text-align: center; padding: 40px 0 10px; }
+        .logo { font-size: 2.5rem; line-height: 1.1; margin-bottom: 5px; color: var(--secondary); text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+        .highlight { color: var(--primary); -webkit-text-stroke: 1px #e1b12c; }
+        
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: white; padding: 6px 14px; border-radius: 20px;
+            font-size: 0.9rem; font-weight: bold; color: var(--text-muted);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+        }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #ccc; transition: all 0.3s; }
+        .status-open .status-dot { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+        .status-open { color: #2ecc71; }
+        .status-closed .status-dot { background: #EA2027; }
+        .status-closed { color: #EA2027; }
+
+        /* SEARCH BAR */
+        .search-container { position: relative; margin-bottom: 20px; }
+        .search-input {
+            width: 100%; padding: 14px 16px 14px 48px;
+            border: 1px solid #dfe6e9; border-radius: 14px;
+            background: white; font-family: var(--font-body); font-size: 1rem;
+            outline: none; transition: all 0.3s; box-shadow: var(--shadow);
+        }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255, 195, 18, 0.2); }
+        .search-icon {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 1.3rem;
+        }
+
+        /* NAV */
+        .category-nav { display: flex; gap: 12px; overflow-x: auto; padding: 10px 20px 20px; margin: 0 -20px; scrollbar-width: none; }
+        .category-nav::-webkit-scrollbar { display: none; }
+        .filter-btn {
+            background: var(--bg-card); color: var(--text-muted); border: 1px solid #dfe6e9;
+            padding: 8px 18px; border-radius: 50px; white-space: nowrap; cursor: pointer;
+            transition: all 0.3s ease; font-family: var(--font-heading); font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .filter-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 4px 10px rgba(234, 32, 39, 0.3); }
+
+        /* MENU CARDS */
+        .menu-section { margin-bottom: 30px; }
+        .section-title { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; margin-bottom: 16px; color: var(--text-main); border-left: 5px solid var(--primary); padding-left: 12px; }
+        .product-list { display: flex; flex-direction: column; gap: 12px; }
+
+        .product-card {
+            background: var(--bg-card); border-radius: var(--radius); padding: 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: var(--shadow); border: 2px solid transparent; 
+            transition: background-color 0.3s, border-color 0.3s; position: relative; z-index: 2;
+        }
+        .product-card.has-items { border-color: var(--success-border); background-color: var(--success-bg); }
+        .product-info { flex: 1; padding-right: 10px; }
+        .product-info h3 { font-size: 1.1rem; margin-bottom: 4px; color: var(--text-main); line-height: 1.2; }
+        .product-price { font-weight: 700; color: var(--secondary); font-size: 1.1rem; font-family: var(--font-heading); }
+
+        .badge-tag {
+            display: inline-block; font-size: 0.7rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; margin-bottom: 4px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .badge-best { background: #FFC312; color: #5a4b08; }
+        .badge-new { background: #4ECDC4; color: #164b46; }
+
+        /* QUANTITY */
+        .quantity-controls {
+            display: flex; align-items: center; gap: 10px;
+            background: #f1f2f6; border-radius: 50px; padding: 4px;
+        }
+        .product-card.has-items .quantity-controls { background: white; }
+        .qty-btn {
+            width: 32px; height: 32px; border-radius: 50%; border: none;
+            font-size: 1.2rem; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: transform 0.1s;
+        }
+        .qty-btn:active { transform: scale(0.9); }
+        .btn-minus { background: transparent; color: var(--text-muted); }
+        .btn-plus { background: var(--success-border); color: white; box-shadow: 0 2px 5px rgba(46, 204, 113, 0.4); }
+        .qty-display { font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; width: 24px; text-align: center; color: var(--text-main); }
+        .qty-display.hidden { opacity: 0.3; }
+
+        /* CONTATO EXTRA & FOOTER */
+        .contact-card {
+            background: #dff9fb; border-radius: var(--radius); padding: 20px; text-align: center;
+            margin-bottom: 20px; border: 1px solid #c7ecee;
+        }
+        .contact-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #25D366; color: white; padding: 10px 20px; border-radius: 50px;
+            text-decoration: none; font-weight: bold; margin-top: 10px;
+            transition: transform 0.2s; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+        }
+        .contact-btn:hover { transform: scale(1.05); }
+
+        .location-card {
+            background: white; border-radius: var(--radius); padding: 24px; text-align: center;
+            color: var(--text-main); border: 2px dashed #b2bec3; position: relative; z-index: 2;
+        }
+        .location-card i { font-size: 2rem; margin-bottom: 10px; color: var(--secondary); }
+        
+        /* ORDER BAR */
+        .order-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%);
+            width: 90%; max-width: 440px;
+            background-color: #25D366; color: white;
+            border-radius: 16px; display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 24px; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+            text-decoration: none; z-index: 100; opacity: 0; pointer-events: none;
+        }
+        .order-bar.visible { opacity: 1; pointer-events: all; }
+        .order-info { display: flex; flex-direction: column; line-height: 1.2; }
+        .order-total { font-weight: 800; font-size: 1.2rem; }
+        .order-count { font-size: 0.85rem; opacity: 0.9; }
+        .order-action { display: flex; align-items: center; gap: 8px; font-weight: 700; font-family: var(--font-heading); background: rgba(0,0,0,0.1); padding: 8px 12px; border-radius: 8px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">🍦<br>Geladinhos<br><span class="highlight">& Sorvetes</span></div>
+            
+            <div id="store-status" class="status-badge">
+                <span class="status-dot"></span> <span id="status-text">Verificando...</span>
+            </div>
+
+            <div class="search-container">
+                <i class="ph ph-magnifying-glass search-icon"></i>
+                <input type="text" id="search-input" class="search-input" placeholder="Buscar sabor (ex: Ninho)..." onkeyup="searchMenu()">
+            </div>
+        </header>
+
+        <nav class="category-nav">
+            <button class="filter-btn active" onclick="filterMenu('all')">Todos</button>
+            <button class="filter-btn" onclick="filterMenu('suco')">Sucos</button>
+            <button class="filter-btn" onclick="filterMenu('gourmet')">Gourmet</button>
+            <button class="filter-btn" onclick="filterMenu('sorvete')">Sorvetes</button>
+        </nav>
+
+        <div id="menu-container">
+            <section class="menu-section cat-suco" data-category="suco">
+                <h2 class="section-title"><i class="ph ph-drop" style="color:#ff9f43"></i> Geladinho Suco</h2>
+                <div class="product-list" id="list-suco"></div>
+            </section>
+            <section class="menu-section cat-suco" data-category="suco">
+                <h2 class="section-title"><i class="ph ph-plant" style="color:#2ecc71"></i> Suco Natural</h2>
+                <div class="product-list" id="list-natural"></div>
+            </section>
+            <section class="menu-section cat-gourmet" data-category="gourmet">
+                <h2 class="section-title"><i class="ph ph-sparkle" style="color:#a55eea"></i> Geladinho Gourmet</h2>
+                <div class="product-list" id="list-gourmet"></div>
+            </section>
+            <section class="menu-section cat-sorvete" data-category="sorvete">
+                <h2 class="section-title"><i class="ph ph-ice-cream" style="color:#eb3b5a"></i> Sorvete Gourmet</h2>
+                <div class="product-list" id="list-sorvete"></div>
+            </section>
+        </div>
+
+        <div class="contact-card">
+            <h3 style="margin-bottom: 5px; color: #009432;">Dúvidas?</h3>
+            <p style="font-size: 0.9rem; color: #636e72;">Fale direto com a gente sem compromisso.</p>
+            <a href="https://wa.me/5511986028635" target="_blank" class="contact-btn">
+                <i class="ph ph-whatsapp-logo" style="font-size: 1.2rem;"></i> Chamar no WhatsApp
+            </a>
+        </div>
+
+        <div class="location-card">
+            <i class="ph ph-map-pin"></i>
+            <h3>Retirada</h3>
+            <p class="address-text">Av. Vereador Antônio Grotkowski, 332<br>Vila Santa Maria - Guarulhos/SP</p>
+            <hr style="border: 0; border-top: 1px dashed #dfe6e9; margin: 10px 0;">
+            <p style="font-size: 0.9rem; color: var(--secondary); font-weight: bold;">CAMPAINHA CASA 2 🔔</p>
+        </div>
+        <br>
+    </div>
+
+    <a id="whatsapp-link" href="#" target="_blank" class="order-bar">
+        <div class="order-info">
+            <span class="order-total" id="total-display">R$ 0,00</span>
+            <span class="order-count" id="count-display">0 itens</span>
+        </div>
+        <div class="order-action">Pedir <i class="ph ph-whatsapp-logo" style="font-size: 1.4rem;"></i></div>
+    </a>
+
+    <script>
+        const WHATSAPP_NUMBER = "5511986028635"; 
+
+        const menuData = {
+            suco: { price: 1.50, flavors: [
+                { name: "Maracujá", tag: "Mais Vendido" },
+                { name: "Abacaxi", tag: "" },
+                { name: "Uva", tag: "" },
+                { name: "Morango", tag: "" },
+                { name: "Azul Espacial", tag: "Novidade" },
+                { name: "Limão", tag: "" },
+                { name: "Goiaba", tag: "" },
+                { name: "Laranja", tag: "" }
+            ]},
+            natural: { price: 2.00, flavors: [
+                { name: "Manga", tag: "" }
+            ]},
+            gourmet: { price: 3.50, flavors: [
+                { name: "Coco", tag: "" },
+                { name: "Chocolate", tag: "Mais Vendido" },
+                { name: "Pudim de Leite", tag: "" },
+                { name: "Mousse Morango Trufado", tag: "" },
+                { name: "Mousse Uva Trufado", tag: "Novidade" },
+                { name: "Chiclete Fantasia", tag: "" },
+                { name: "Ninho Trufado", tag: "Mais Vendido" },
+                { name: "Ninho c/ Nutella", tag: "Mais Vendido" },
+                { name: "Ninho c/ Morango", tag: "" },
+                { name: "Paçoca Trufada", tag: "" }
+            ]},
+            sorvete: { price: 4.00, flavors: [
+                { name: "Abacaxi c/ Doce de Leite", tag: "" },
+                { name: "Abacaxi ao Vinho", tag: "" },
+                { name: "Passas ao Rum", tag: "" },
+                { name: "Maracujá c/ Caramelo", tag: "" },
+                { name: "Chocolate c/ Morango", tag: "" }
+            ]}
+        };
+
+        let cart = {}; 
+
+        function init() {
+            renderItems('list-suco', menuData.suco);
+            renderItems('list-natural', menuData.natural);
+            renderItems('list-gourmet', menuData.gourmet);
+            renderItems('list-sorvete', menuData.sorvete);
+            checkOpeningHours();
+            loadCart(); 
+        }
+
+        function renderItems(listId, data) {
+            const list = document.getElementById(listId);
+            list.innerHTML = data.flavors.map(item => {
+                const safeId = item.name.replace(/\s+/g, '-').toLowerCase();
+                let badgeHtml = '';
+                if (item.tag === 'Mais Vendido') badgeHtml = `<span class="badge-tag badge-best">★ Mais Vendido</span>`;
+                if (item.tag === 'Novidade') badgeHtml = `<span class="badge-tag badge-new">✨ Novidade</span>`;
+
+                return `
+                <div class="product-card" id="card-${safeId}">
+                    <div class="product-info">
+                        ${badgeHtml}
+                        <h3>${item.name}</h3>
+                        <div class="product-price">R$ ${data.price.toFixed(2).replace('.', ',')}</div>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn btn-minus" onclick="updateQty('${item.name}', '${safeId}', ${data.price}, -1)"><i class="ph ph-minus"></i></button>
+                        <span class="qty-display hidden" id="qty-${safeId}">0</span>
+                        <button class="qty-btn btn-plus" onclick="updateQty('${item.name}', '${safeId}', ${data.price}, 1)"><i class="ph ph-plus"></i></button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function updateQty(flavor, safeId, price, change) {
+            if (!cart[flavor]) cart[flavor] = { qty: 0, price: price };
+            cart[flavor].qty += change;
+            if (cart[flavor].qty < 0) cart[flavor].qty = 0;
+            if (cart[flavor].qty === 0) delete cart[flavor];
+
+            updateCardVisual(safeId, cart[flavor] ? cart[flavor].qty : 0);
+            updateOrderBar();
+            saveCart();
+        }
+
+        function updateCardVisual(safeId, qty) {
+            const qtyDisplay = document.getElementById(`qty-${safeId}`);
+            const cardElement = document.getElementById(`card-${safeId}`);
+            if(!qtyDisplay) return;
+
+            qtyDisplay.innerText = qty;
+            if (qty > 0) {
+                cardElement.classList.add('has-items');
+                qtyDisplay.classList.remove('hidden');
+                gsap.fromTo(qtyDisplay, { scale: 1.3 }, { scale: 1, duration: 0.2 });
+            } else {
+                cardElement.classList.remove('has-items');
+                qtyDisplay.classList.add('hidden');
+            }
+        }
+
+        function saveCart() { localStorage.setItem('iceCreamCart', JSON.stringify(cart)); }
+
+        function loadCart() {
+            const saved = localStorage.getItem('iceCreamCart');
+            if (saved) {
+                cart = JSON.parse(saved);
+                for (let flavor in cart) {
+                    const safeId = flavor.replace(/\s+/g, '-').toLowerCase();
+                    updateCardVisual(safeId, cart[flavor].qty);
+                }
+                updateOrderBar();
+            }
+        }
+
+        function updateOrderBar() {
+            let total = 0; let count = 0;
+            for (let item in cart) {
+                total += cart[item].qty * cart[item].price;
+                count += cart[item].qty;
+            }
+            const bar = document.querySelector('.order-bar');
+            document.getElementById('total-display').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            document.getElementById('count-display').innerText = `${count} ite${count !== 1 ? 'ns' : 'm'}`;
+
+            if (count > 0) {
+                if(!bar.classList.contains('visible')) {
+                    bar.classList.add('visible');
+                    gsap.fromTo(".order-bar", { y: 150, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "elastic.out(1, 0.6)" });
+                }
+            } else {
+                bar.classList.remove('visible');
+                gsap.to(".order-bar", { y: 150, opacity: 0, duration: 0.3 });
+            }
+            if(count > 0) updateWhatsappLink(total);
+        }
+
+        function updateWhatsappLink(total) {
+            let message = "Olá! Gostaria de fazer um pedido 🍦\n\n";
+            for (let flavor in cart) {
+                const item = cart[flavor];
+                message += `✅ ${item.qty}x ${flavor} - R$ ${(item.qty * item.price).toFixed(2)}\n`;
+            }
+            message += `\n💰 *Total: R$ ${total.toFixed(2).replace('.', ',')}*`;
+            message += `\n\n📍 *Vou retirar em:* Av. Vereador Antônio Grotkowski, 332 (Casa 2).`;
+            document.getElementById('whatsapp-link').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+        }
+
+        function checkOpeningHours() {
+            const now = new Date();
+            const hour = now.getHours();
+            const badge = document.getElementById('store-status');
+            const text = document.getElementById('status-text');
+            const isOpen = hour >= 9 && hour < 20;
+
+            if (isOpen) {
+                badge.classList.add('status-open');
+                text.innerText = "Aberto agora";
+            } else {
+                badge.classList.add('status-closed');
+                text.innerText = "Fechado (Abre às 09h)";
+            }
+        }
+
+        function searchMenu() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
+            const sections = document.querySelectorAll('.menu-section');
+
+            cards.forEach(card => {
+                const title = card.querySelector('h3').innerText.toLowerCase();
+                if (title.includes(query)) card.style.display = 'flex';
+                else card.style.display = 'none';
+            });
+
+            sections.forEach(sec => {
+                const hasVisible = Array.from(sec.querySelectorAll('.product-card')).some(c => c.style.display !== 'none');
+                sec.style.display = hasVisible ? 'block' : 'none';
+            });
+        }
+
+        function filterMenu(category) {
+            const sections = document.querySelectorAll('.menu-section');
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('search-input').value = '';
+            
+            gsap.to(sections, { opacity: 0, duration: 0.2, onComplete: () => {
+                sections.forEach(sec => {
+                    sec.querySelectorAll('.product-card').forEach(c => c.style.display = 'flex');
+                    if (category === 'all' || sec.dataset.category === category) sec.style.display = 'block';
+                    else sec.style.display = 'none';
+                });
+                gsap.to(sections, { opacity: 1, duration: 0.3 });
+            }});
+        }
+
+        init();
+    </script>
+</body>
+</html>
