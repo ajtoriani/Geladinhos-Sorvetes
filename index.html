@@ -348,7 +348,8 @@
             gourmet: { price: 3.50, flavors: [
                 { name: "Coco", tag: "" },
                 { name: "Chocolate", tag: "Mais Vendido" },
-                { name: "Pudim de Leite", tag: "" },
+                { name: "Pudim de Leite", tag: "" }, 
+{ name: "Romeu e Julieta", tag: "Novidade" },
                 { name: "Mousse Morango Trufado", tag: "" },
                 { name: "Mousse Uva Trufado", tag: "Novidade" },
                 { name: "Chiclete Fantasia", tag: "" },
@@ -555,7 +556,7 @@
             }, 1500);
         }
 
-        // --- HORÁRIO 13h-20h ---
+        // --- HORÁRIO 12h-20h ---
         function checkOpeningHours() {
             const now = new Date();
             const spTime = now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" });
@@ -563,7 +564,7 @@
             
             const badge = document.getElementById('store-status');
             const text = document.getElementById('status-text');
-            const isOpen = currentHour >= 13 && currentHour < 20;
+            const isOpen = currentHour >= 12 && currentHour < 20;
 
             if (isOpen) {
                 badge.classList.add('status-open');
