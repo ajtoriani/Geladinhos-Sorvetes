@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Geladinhos & Sorvetes Gourmet</title>
     
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍦</text></svg>">
+    <meta property="og:title" content="Geladinhos & Sorvetes Gourmet 🍦">
+    <meta property="og:description" content="Cardápio Digital: Escolha seus sabores favoritos e peça direto pelo WhatsApp! 😋">
+    <meta property="og:image" content="https://geladinhosesorvetes.vercel.app/img/capa-zap.png"> 
+    <meta property="og:url" content="https://geladinhosesorvetes.vercel.app">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#e84393"> <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍦</text></svg>">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -164,7 +169,7 @@
         }
         .action-btn:hover { background: #dfe6e9; }
 
-        /* --- BARRA FLUTUANTE (Abre Carrinho) --- */
+        /* --- BARRA FLUTUANTE --- */
         .order-bar {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%);
             width: 90%; max-width: 440px;
@@ -281,11 +286,11 @@
             </p>
             
             <div class="map-actions">
-               <a href="https://www.google.com/maps/search/?api=1&query=Av.+Vereador+Antônio+Grotkowski,+332+Guarulhos" 
-   target="_blank" class="action-btn">
-   <i class="ph ph-map-trifold" style="font-size: 1.2rem; color: #EA2027; margin:0;"></i> 
-   Ver Rota
-</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=Av.+Vereador+Antônio+Grotkowski,+332+-+Vila+Santa+Maria,+Guarulhos" 
+                   target="_blank" class="action-btn">
+                   <i class="ph ph-map-trifold" style="font-size: 1.2rem; color: #EA2027; margin:0;"></i> 
+                   Ver Rota
+                </a>
 
                 <button onclick="copyAddress()" class="action-btn">
                    <i class="ph ph-copy" style="font-size: 1.2rem; color: #0984e3; margin:0;"></i>
@@ -371,16 +376,16 @@
 
         // --- INICIALIZAÇÃO ---
         function init() {
-            renderItems('list-suco', menuData.suco);
-            renderItems('list-natural', menuData.natural);
-            renderItems('list-gourmet', menuData.gourmet);
-            renderItems('list-sorvete', menuData.sorvete);
+            renderItems('list-suco', menuData.suco, 'Geladinho Suco 🍊');
+            renderItems('list-natural', menuData.natural, 'Suco Natural 🍃');
+            renderItems('list-gourmet', menuData.gourmet, 'Geladinho Gourmet 🍫');
+            renderItems('list-sorvete', menuData.sorvete, 'Sorvete de Massa 🍦');
             checkOpeningHours();
             loadCart(); 
         }
 
         // --- RENDERIZAÇÃO ---
-        function renderItems(listId, data) {
+        function renderItems(listId, data, categoryName) {
             const list = document.getElementById(listId);
             list.innerHTML = data.flavors.map(item => {
                 const safeId = item.name.replace(/\s+/g, '-').toLowerCase();
@@ -396,17 +401,19 @@
                         <div class="product-price">R$ ${data.price.toFixed(2).replace('.', ',')}</div>
                     </div>
                     <div class="quantity-controls">
-                        <button class="qty-btn btn-minus" onclick="updateQty('${item.name}', '${safeId}', ${data.price}, -1)"><i class="ph ph-minus"></i></button>
+                        <button class="qty-btn btn-minus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${data.price}, -1)"><i class="ph ph-minus"></i></button>
                         <span class="qty-display hidden" id="qty-${safeId}">0</span>
-                        <button class="qty-btn btn-plus" onclick="updateQty('${item.name}', '${safeId}', ${data.price}, 1)"><i class="ph ph-plus"></i></button>
+                        <button class="qty-btn btn-plus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${data.price}, 1)"><i class="ph ph-plus"></i></button>
                     </div>
                 </div>
             `}).join('');
         }
 
-        // --- LOGICA CARRINHO ---
-        function updateQty(flavor, safeId, price, change) {
-            if (!cart[flavor]) cart[flavor] = { qty: 0, price: price };
+        // --- LÓGICA DO CARRINHO (AGORA COM CATEGORIA) ---
+        function updateQty(category, flavor, safeId, price, change) {
+            if (!cart[flavor]) {
+                cart[flavor] = { qty: 0, price: price, category: category };
+            }
             cart[flavor].qty += change;
             if (cart[flavor].qty < 0) cart[flavor].qty = 0;
             if (cart[flavor].qty === 0) delete cart[flavor];
@@ -432,18 +439,36 @@
             }
         }
 
-        // --- LOCAL STORAGE ---
+        // --- LOCAL STORAGE (COM CORREÇÃO DE ERRO UNDEFINED) ---
         function saveCart() { localStorage.setItem('iceCreamCart', JSON.stringify(cart)); }
 
         function loadCart() {
             const saved = localStorage.getItem('iceCreamCart');
             if (saved) {
-                cart = JSON.parse(saved);
-                for (let flavor in cart) {
-                    const safeId = flavor.replace(/\s+/g, '-').toLowerCase();
-                    updateCardVisual(safeId, cart[flavor].qty);
+                try {
+                    const parsedCart = JSON.parse(saved);
+                    
+                    // VERIFICAÇÃO DE SEGURANÇA: Se é carrinho velho (sem categoria), limpa.
+                    const isOldVersion = Object.values(parsedCart).some(item => !item.category);
+                    
+                    if (isOldVersion) {
+                        console.warn("Versão antiga do carrinho detectada. Resetando...");
+                        localStorage.removeItem('iceCreamCart');
+                        cart = {};
+                        return;
+                    }
+
+                    cart = parsedCart;
+                    for (let flavor in cart) {
+                        const safeId = flavor.replace(/\s+/g, '-').toLowerCase();
+                        updateCardVisual(safeId, cart[flavor].qty);
+                    }
+                    updateOrderBar();
+                } catch (e) {
+                    console.error("Erro ao carregar carrinho", e);
+                    localStorage.removeItem('iceCreamCart');
+                    cart = {};
                 }
-                updateOrderBar();
             }
         }
 
@@ -469,7 +494,7 @@
             }
         }
 
-        // --- MODAL / BOTTOM SHEET (COM EMPTY STATE) ---
+        // --- MODAL / BOTTOM SHEET ---
         function toggleCart(open) {
             const modal = document.getElementById('cart-modal');
             if (open) {
@@ -486,7 +511,6 @@
             let total = 0;
 
             if (Object.keys(cart).length === 0) {
-                // EMPTY STATE ILUSTRADO
                 container.innerHTML = `
                     <div style="text-align:center; padding: 40px 20px;">
                         <i class="ph ph-ice-cream" style="font-size: 5rem; color: #dfe6e9; margin-bottom: 20px;"></i>
@@ -510,13 +534,14 @@
                 container.innerHTML += `
                     <div class="cart-item">
                         <div class="item-info">
+                            <span style="font-size: 0.8rem; color: var(--secondary); font-weight:bold;">${item.category}</span>
                             <h4>${flavor}</h4>
                             <span class="item-price">${item.qty}x R$ ${item.price.toFixed(2).replace('.',',')}</span>
                         </div>
                         <div class="quantity-controls" style="background: #f1f2f6; padding: 2px;">
-                            <button class="qty-btn btn-minus" onclick="updateQty('${flavor}', '${safeId}', ${item.price}, -1); renderCartModal()"><i class="ph ph-minus"></i></button>
+                            <button class="qty-btn btn-minus" onclick="updateQty('${item.category}', '${flavor}', '${safeId}', ${item.price}, -1); renderCartModal()"><i class="ph ph-minus"></i></button>
                             <span class="qty-display" style="font-size: 1rem; width: 24px;">${item.qty}</span>
-                            <button class="qty-btn btn-plus" onclick="updateQty('${flavor}', '${safeId}', ${item.price}, 1); renderCartModal()"><i class="ph ph-plus"></i></button>
+                            <button class="qty-btn btn-plus" onclick="updateQty('${item.category}', '${flavor}', '${safeId}', ${item.price}, 1); renderCartModal()"><i class="ph ph-plus"></i></button>
                         </div>
                     </div>
                 `;
@@ -524,36 +549,44 @@
             document.getElementById('modal-total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
         }
 
-        // --- FINALIZAR PEDIDO (COM CONFETES) ---
+        // --- FINALIZAR PEDIDO (AGRUPADO POR CATEGORIA) ---
         function finalizeOrder() {
-            let message = "Olá! Gostaria de fazer um pedido 🍦\n\n";
-            let total = 0;
-            
             if (Object.keys(cart).length === 0) return alert("Adicione itens antes de pedir!");
 
+            let message = "Olá! Gostaria de fazer um pedido 🍦\n";
+            let total = 0;
+            
+            // Agrupar itens por categoria
+            let groups = {};
             for (let flavor in cart) {
-                const item = cart[flavor];
-                message += `✅ ${item.qty}x ${flavor} - R$ ${(item.qty * item.price).toFixed(2)}\n`;
+                let item = cart[flavor];
+                if (!groups[item.category]) groups[item.category] = [];
+                groups[item.category].push({ ...item, name: flavor });
                 total += item.qty * item.price;
             }
+
+            // Montar mensagem
+            for (let category in groups) {
+                message += `\n*${category}*\n`;
+                groups[category].forEach(item => {
+                    message += `✅ ${item.qty}x ${item.name} - R$ ${(item.qty * item.price).toFixed(2)}\n`;
+                });
+                message += `--------------------\n`;
+            }
             
-            message += `\n💰 *Total: R$ ${total.toFixed(2).replace('.', ',')}*`;
+            message += `\n💰 *Total Geral: R$ ${total.toFixed(2).replace('.', ',')}*`;
             message += `\n\n📍 *Vou retirar em:* Av. Vereador Antônio Grotkowski, 332 (Casa 2).`;
             
             const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
-            // Dispara Confetes!
             confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
+                particleCount: 150, spread: 70, origin: { y: 0.6 },
                 colors: ['#FFC312', '#e84393', '#25D366']
             });
 
-            // Aguarda 8s 
             setTimeout(() => {
                 window.open(link, '_blank');
-            }, 800);
+            }, 1500);
         }
 
         // --- HORÁRIO 12h-20h ---
