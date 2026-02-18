@@ -385,8 +385,8 @@
                 { name: "Ninho c/ Morango", tag: "" },
                 { name: "Maçã do Amor", tag: "" },
                 { name: "Paçoca Trufada", tag: "Mais Vendido" },
-{ name: "Chocolate Trufado", tag: "" },
-{ name: "Prestígio", tag: "Novidade" }
+                { name: "Chocolate Trufado", tag: "" },
+                { name: "Prestígio", tag: "Novidade" }
             ]},
 
             sorvete: { price: 4.00, flavors: [
@@ -436,7 +436,7 @@
             `}).join('');
         }
 
-        // --- LÓGICA DO CARRINHO (AGORA COM CATEGORIA) ---
+        // --- LÓGICA DO CARRINHO ---
         function updateQty(category, flavor, safeId, price, change) {
             if (!cart[flavor]) {
                 cart[flavor] = { qty: 0, price: price, category: category };
@@ -466,7 +466,7 @@
             }
         }
 
-        // --- LOCAL STORAGE (COM CORREÇÃO DE ERRO UNDEFINED) ---
+        // --- LOCAL STORAGE  ---
         function saveCart() { localStorage.setItem('iceCreamCart', JSON.stringify(cart)); }
 
         function loadCart() {
@@ -475,7 +475,6 @@
                 try {
                     const parsedCart = JSON.parse(saved);
                     
-                    // VERIFICAÇÃO DE SEGURANÇA: Se é carrinho velho (sem categoria), limpa.
                     const isOldVersion = Object.values(parsedCart).some(item => !item.category);
                     
                     if (isOldVersion) {
@@ -613,7 +612,7 @@
 
             setTimeout(() => {
                 window.open(link, '_blank');
-            }, 1500);
+            }, 1000);
         }
 
         // --- HORÁRIO 12h-20h ---
