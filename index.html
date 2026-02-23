@@ -360,7 +360,6 @@
 
         const menuData = {
             // --- CATEGORIA NOVA: SOBREMESAS ---
-            // Adicionamos a propriedade 'price' individualmente para quem tem preço diferente.
             sobremesas: { price: 0, flavors: [
                 { name: "Pavê c/ bolacha sabor creme (160g)", tag: "", price: 4.50 },
                 { name: "Pavê c/ bolacha sabor chocolate (160g)", tag: "", price: 5.00 },
@@ -434,7 +433,7 @@
             loadCart(); 
         }
 
-        // --- RENDERIZAÇÃO (AGORA INTELIGENTE PARA PREÇOS INDIVIDUAIS) ---
+        // --- RENDERIZAÇÃO  ---
         function renderItems(listId, data, categoryName) {
             const list = document.getElementById(listId);
             list.innerHTML = data.flavors.map(item => {
@@ -443,7 +442,7 @@
                 if (item.tag === 'Mais Vendido') badgeHtml = `<span class="badge-tag badge-best">★ Mais Vendido</span>`;
                 if (item.tag === 'Novidade') badgeHtml = `<span class="badge-tag badge-new">✨ Novidade</span>`;
 
-                // PULO DO GATO: Se o item tiver preço próprio, usa ele. Se não, usa o da categoria!
+         
                 const itemPrice = item.price !== undefined ? item.price : data.price;
 
                 return `
@@ -601,7 +600,7 @@
             document.getElementById('modal-total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
         }
 
-        // --- FINALIZAR PEDIDO (AGRUPADO POR CATEGORIA) ---
+        // --- FINALIZAR PEDIDO  ---
         function finalizeOrder() {
             if (Object.keys(cart).length === 0) return alert("Adicione itens antes de pedir!");
 
