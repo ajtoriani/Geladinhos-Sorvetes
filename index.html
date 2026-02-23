@@ -1,15 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-   <meta name="description" content="Cardápio Digital Interativo. Escolha sabores de Geladinho Gourmet, Sucos Naturais e Sorvetes de Massa. Entrega rápida e refrescância pura em Guarulhos! 😋">
-    <meta name="keywords" content="geladinho gourmet, sorvete, sacolé, dindin, chup-chup, sorveteria, delivery, guarulhos, vila santa maria, cardápio digital, doce, sobremesa">
+   <meta name="description" content="Cardápio Digital Interativo. Escolha sabores de Geladinho Gourmet, Sucos Naturais, Sorvetes e Sobremesas. Entrega rápida e refrescância pura em Guarulhos! 😋">
+    <meta name="keywords" content="geladinho gourmet, sorvete, bolo de pote, pavê, sobremesa, delivery, guarulhos, vila santa maria, cardápio digital, doce">
     <meta name="author" content="AJ Toriani - Tech & Design">
     <meta name="robots" content="index, follow">
 
-    <meta property="og:title" content="Geladinhos & Sorvetes Gourmet 🍦">
+    <meta property="og:title" content="Didilicias Gourmet 🍦">
     <meta property="og:description" content="Bateu aquela vontade de doce? 👀 Clique, escolha seu sabor favorito e peça direto pelo WhatsApp! Entrega rápida.">
     
     <meta property="og:image" content="https://geladinhosesorvetes.vercel.app/img/capa-whatsapp.png">
@@ -20,11 +21,12 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_BR">
 
-    <meta name="theme-color" content="#e84393"> <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍦</text></svg>">
+    <meta name="theme-color" content="#e84393"> 
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍦</text></svg>">
     <meta name="apple-mobile-web-app-status-bar-style" content="#e84393">
     <meta name="msapplication-navbutton-color" content="#e84393">
 
-     <title>Geladinhos & Sorvetes Gourmet</title>
+     <title>Didilicias Gourmet</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -244,7 +246,7 @@
 
     <div class="container">
         <header>
-            <div class="logo">🍦<br>Didilicias<br><span class="highlight"></span></div>
+            <div class="logo">🍦<br>Didilicias<br><span class="highlight">Gourmet</span></div>
             <p class="tagline">Refrescância Pura & Sabores Artesanais</p>
             
             <div id="store-status" class="status-badge">
@@ -259,12 +261,18 @@
 
         <nav class="category-nav">
             <button class="filter-btn active" onclick="filterMenu('all')">Todos</button>
+            <button class="filter-btn" onclick="filterMenu('sobremesa')">Bolos & Pavês</button>
             <button class="filter-btn" onclick="filterMenu('suco')">Sucos</button>
             <button class="filter-btn" onclick="filterMenu('gourmet')">Gourmet</button>
             <button class="filter-btn" onclick="filterMenu('sorvete')">Sorvetes</button>
         </nav>
 
         <div id="menu-container">
+            <section class="menu-section cat-sobremesa" data-category="sobremesa">
+                <h2 class="section-title"><i class="ph ph-cake" style="color:#d980fa"></i> Bolos & Pavês</h2>
+                <div class="product-list" id="list-sobremesa"></div>
+            </section>
+            
             <section class="menu-section cat-suco" data-category="suco">
                 <h2 class="section-title"><i class="ph ph-drop" style="color:#ff9f43"></i> Geladinho Suco</h2>
                 <div class="product-list" id="list-suco"></div>
@@ -351,6 +359,21 @@
         const WHATSAPP_NUMBER = "5511986028635"; 
 
         const menuData = {
+            // --- CATEGORIA NOVA: SOBREMESAS ---
+            // Adicionamos a propriedade 'price' individualmente para quem tem preço diferente.
+            sobremesas: { price: 0, flavors: [
+                { name: "Pavê c/ bolacha sabor creme (160g)", tag: "", price: 4.50 },
+                { name: "Pavê c/ bolacha sabor chocolate (160g)", tag: "", price: 5.00 },
+                { name: "Bolo no pote sabor 2 Amores (200g)", tag: "", price: 8.00 },
+                { name: "Bolo no pote sabor Brigadeiro (200g)", tag: "", price: 8.50 },
+                { name: "Bolo no pote sabor Ninho c/ Nutella (200g)", tag: "", price: 8.00 },
+                { name: "Bolo no pote sabor Ninho c/ geléia de morango (200g)", tag: "", price: 8.00 },
+                { name: "Mini bolo no pote sabor Brigadeiro (90g)", tag: "", price: 4.50 },
+                { name: "Mini bolo no pote sabor Ninho c/ geléia de morango (90g)", tag: "", price: 4.50 },
+                { name: "Mini bolo no pote sabor Nutella (90g)", tag: "", price: 4.50 },
+                { name: "Mini bolo no pote sabor Ninho c/ Nutella (90g)", tag: "", price: 4.50 }
+            ]},
+            
             suco: { price: 1.50, flavors: [
                 { name: "Maracujá", tag: "Mais Vendido" },
                 { name: "Abacaxi", tag: "" },
@@ -388,7 +411,6 @@
                 { name: "Chocolate Trufado", tag: "" },
                 { name: "Prestígio", tag: "Novidade" }
             ]},
-
             sorvete: { price: 4.00, flavors: [
                 { name: "Abacaxi c/ Doce de Leite", tag: "" },
                 { name: "Abacaxi ao Vinho", tag: "" },
@@ -403,6 +425,7 @@
 
         // --- INICIALIZAÇÃO ---
         function init() {
+            renderItems('list-sobremesa', menuData.sobremesas, 'Bolos & Pavês 🍰');
             renderItems('list-suco', menuData.suco, 'Geladinho Suco 🍊');
             renderItems('list-natural', menuData.natural, 'Suco Natural 🍃');
             renderItems('list-gourmet', menuData.gourmet, 'Geladinho Gourmet 🍫');
@@ -411,7 +434,7 @@
             loadCart(); 
         }
 
-        // --- RENDERIZAÇÃO ---
+        // --- RENDERIZAÇÃO (AGORA INTELIGENTE PARA PREÇOS INDIVIDUAIS) ---
         function renderItems(listId, data, categoryName) {
             const list = document.getElementById(listId);
             list.innerHTML = data.flavors.map(item => {
@@ -420,17 +443,20 @@
                 if (item.tag === 'Mais Vendido') badgeHtml = `<span class="badge-tag badge-best">★ Mais Vendido</span>`;
                 if (item.tag === 'Novidade') badgeHtml = `<span class="badge-tag badge-new">✨ Novidade</span>`;
 
+                // PULO DO GATO: Se o item tiver preço próprio, usa ele. Se não, usa o da categoria!
+                const itemPrice = item.price !== undefined ? item.price : data.price;
+
                 return `
                 <div class="product-card" id="card-${safeId}">
                     <div class="product-info">
                         ${badgeHtml}
                         <h3>${item.name}</h3>
-                        <div class="product-price">R$ ${data.price.toFixed(2).replace('.', ',')}</div>
+                        <div class="product-price">R$ ${itemPrice.toFixed(2).replace('.', ',')}</div>
                     </div>
                     <div class="quantity-controls">
-                        <button class="qty-btn btn-minus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${data.price}, -1)"><i class="ph ph-minus"></i></button>
+                        <button class="qty-btn btn-minus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${itemPrice}, -1)"><i class="ph ph-minus"></i></button>
                         <span class="qty-display hidden" id="qty-${safeId}">0</span>
-                        <button class="qty-btn btn-plus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${data.price}, 1)"><i class="ph ph-plus"></i></button>
+                        <button class="qty-btn btn-plus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${itemPrice}, 1)"><i class="ph ph-plus"></i></button>
                     </div>
                 </div>
             `}).join('');
@@ -679,3 +705,4 @@
     </script>
 </body>
 </html>
+
