@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -261,7 +260,7 @@
 
         <nav class="category-nav">
             <button class="filter-btn active" onclick="filterMenu('all')">Todos</button>
-            <button class="filter-btn" onclick="filterMenu('sobremesa')">Bolos & Pavês</button>
+            <button class="filter-btn" onclick="filterMenu('sobremesa')">Doces & Bolos</button>
             <button class="filter-btn" onclick="filterMenu('suco')">Sucos</button>
             <button class="filter-btn" onclick="filterMenu('gourmet')">Gourmet</button>
             <button class="filter-btn" onclick="filterMenu('sorvete')">Sorvetes</button>
@@ -269,7 +268,7 @@
 
         <div id="menu-container">
             <section class="menu-section cat-sobremesa" data-category="sobremesa">
-                <h2 class="section-title"><i class="ph ph-cake" style="color:#d980fa"></i> Bolos & Pavês</h2>
+                <h2 class="section-title"><i class="ph ph-cake" style="color:#d980fa"></i> Doces & Bolos</h2>
                 <div class="product-list" id="list-sobremesa"></div>
             </section>
             
@@ -359,7 +358,7 @@
         const WHATSAPP_NUMBER = "5511986028635"; 
 
         const menuData = {
-            // --- CATEGORIA NOVA: SOBREMESAS ---
+            // --- CATEGORIA NOVA ATUALIZADA COM OS NOVOS DOCES ---
             sobremesas: { price: 0, flavors: [
                 { name: "Pavê c/ bolacha sabor creme (160g)", tag: "", price: 4.50 },
                 { name: "Pavê c/ bolacha sabor chocolate (160g)", tag: "", price: 5.00 },
@@ -367,48 +366,56 @@
                 { name: "Bolo no pote sabor Brigadeiro (200g)", tag: "", price: 8.50 },
                 { name: "Bolo no pote sabor Ninho c/ Nutella (200g)", tag: "", price: 8.00 },
                 { name: "Bolo no pote sabor Ninho c/ geléia de morango (200g)", tag: "", price: 8.00 },
+                { name: "Bolo de cenoura c/ cobertura de chocolate (Fatia 160g)", tag: "Novidade", price: 5.50 },
                 { name: "Mini bolo no pote sabor Brigadeiro (90g)", tag: "", price: 4.50 },
                 { name: "Mini bolo no pote sabor Ninho c/ geléia de morango (90g)", tag: "", price: 4.50 },
                 { name: "Mini bolo no pote sabor Nutella (90g)", tag: "", price: 4.50 },
-                { name: "Mini bolo no pote sabor Ninho c/ Nutella (90g)", tag: "", price: 4.50 }
+                { name: "Mini bolo no pote sabor Ninho c/ Nutella (90g)", tag: "", price: 4.50 },
+                { name: "Mini pudim de leite (120g)", tag: "Novidade", price: 8.00 },
+                { name: "Quarteto festa (Brig., Bicho de pé, Beijinho e Ninho) - 120g", tag: "Novidade", price: 12.00 },
+                { name: "Brigadeiro gourmet individual (30g)", tag: "", price: 3.00 }
             ]},
             
+            // --- GELADINHOS AGORA COM PESO (110ml) ---
             suco: { price: 1.50, flavors: [
-                { name: "Maracujá", tag: "Mais Vendido" },
-                { name: "Abacaxi", tag: "" },
-                { name: "Uva", tag: "" },
-                { name: "Morango", tag: "" },
-                { name: "Azul Espacial", tag: "" },
-                { name: "Limão", tag: "" },
-                { name: "Goiaba", tag: "" },
-                { name: "Laranja", tag: "" }
+                { name: "Abacaxi (110ml)", tag: "" },
+                { name: "Uva (110ml)", tag: "" },
+                { name: "Morango (110ml)", tag: "" },
+                { name: "Azul Espacial (110ml)", tag: "" },
+                { name: "Limão (110ml)", tag: "" },
+                { name: "Goiaba (110ml)", tag: "" },
+                { name: "Laranja (110ml)", tag: "" }
             ]},
             natural: { price: 2.00, flavors: [
-                { name: "Manga", tag: "" }
+                { name: "Manga (110ml)", tag: "" },
+                { name: "Goiaba (110ml)", tag: "Novidade" },
+                { name: "Abacaxi (110ml)", tag: "Novidade" },
+                { name: "Maracujá (110ml)", tag: "Novidade" },
+                { name: "Morango (110ml)", tag: "Novidade" }
             ]},
             gourmet: { price: 3.50, flavors: [
-                { name: "Brigadeiro", tag: "" },
-                { name: "Coco", tag: "" },
-                { name: "Chocolate", tag: "Mais Vendido" },
-                { name: "Pudim de Leite", tag: "" }, 
-                { name: "Romeu e Julieta", tag: "" },
-                { name: "Doce de Leite", tag: "" },
-                { name: "Goiaba Cremosa", tag: "" },
-                { name: "Abacaxi com Vinho", tag: "Novidade" },
-                { name: "Mousse Morango Trufado", tag: "" },
-                { name: "Mousse Uva Trufado", tag: "" },
-                { name: "Mousse Limão c/ Chocolate Branco", tag: "" },
-                { name: "Abacaxi com Coco", tag: "Novidade" },
-                { name: "Abacaxi com Doce de Leite", tag: "Novidade" },
-                { name: "Ninho Trufado", tag: "" },
-                { name: "Maracujá Trufado", tag: "" },
-                { name: "Doce de Leite com Ameixa", tag: "" },
-                { name: "Ninho c/ Nutella", tag: "Mais Vendido" },
-                { name: "Ninho c/ Morango", tag: "" },
-                { name: "Maçã do Amor", tag: "" },
-                { name: "Paçoca Trufada", tag: "Mais Vendido" },
-                { name: "Chocolate Trufado", tag: "" },
-                { name: "Prestígio", tag: "Novidade" }
+                { name: "Brigadeiro (110ml)", tag: "" },
+                { name: "Coco (110ml)", tag: "" },
+                { name: "Chocolate (110ml)", tag: "Mais Vendido" },
+                { name: "Pudim de Leite (110ml)", tag: "" }, 
+                { name: "Romeu e Julieta (110ml)", tag: "" },
+                { name: "Doce de Leite (110ml)", tag: "" },
+                { name: "Goiaba Cremosa (110ml)", tag: "" },
+                { name: "Abacaxi com Vinho (110ml)", tag: "Novidade" },
+                { name: "Mousse Morango Trufado (110ml)", tag: "" },
+                { name: "Mousse Uva Trufado (110ml)", tag: "" },
+                { name: "Mousse Limão c/ Chocolate Branco (110ml)", tag: "" },
+                { name: "Abacaxi com Coco (110ml)", tag: "Novidade" },
+                { name: "Abacaxi com Doce de Leite (110ml)", tag: "Novidade" },
+                { name: "Ninho Trufado (110ml)", tag: "" },
+                { name: "Maracujá Trufado (110ml)", tag: "" },
+                { name: "Doce de Leite com Ameixa (110ml)", tag: "" },
+                { name: "Ninho c/ Nutella (110ml)", tag: "Mais Vendido" },
+                { name: "Ninho c/ Morango (110ml)", tag: "" },
+                { name: "Maçã do Amor (110ml)", tag: "" },
+                { name: "Paçoca Trufada (110ml)", tag: "Mais Vendido" },
+                { name: "Chocolate Trufado (110ml)", tag: "" },
+                { name: "Prestígio (110ml)", tag: "Novidade" }
             ]},
             sorvete: { price: 4.00, flavors: [
                 { name: "Abacaxi c/ Doce de Leite", tag: "" },
@@ -421,10 +428,11 @@
         };
 
         let cart = {}; 
+        const CART_KEY = 'didiliciasCart_v2'; // PULO DO GATO: Nome novo para o carrinho não bugar com a versão anterior!
 
         // --- INICIALIZAÇÃO ---
         function init() {
-            renderItems('list-sobremesa', menuData.sobremesas, 'Bolos & Pavês 🍰');
+            renderItems('list-sobremesa', menuData.sobremesas, 'Doces & Bolos 🍰');
             renderItems('list-suco', menuData.suco, 'Geladinho Suco 🍊');
             renderItems('list-natural', menuData.natural, 'Suco Natural 🍃');
             renderItems('list-gourmet', menuData.gourmet, 'Geladinho Gourmet 🍫');
@@ -433,16 +441,15 @@
             loadCart(); 
         }
 
-        // --- RENDERIZAÇÃO  ---
+        // --- RENDERIZAÇÃO ---
         function renderItems(listId, data, categoryName) {
             const list = document.getElementById(listId);
             list.innerHTML = data.flavors.map(item => {
-                const safeId = item.name.replace(/\s+/g, '-').toLowerCase();
+                const safeId = item.name.replace(/\s+/g, '-').replace(/[()]/g, '').toLowerCase();
                 let badgeHtml = '';
                 if (item.tag === 'Mais Vendido') badgeHtml = `<span class="badge-tag badge-best">★ Mais Vendido</span>`;
                 if (item.tag === 'Novidade') badgeHtml = `<span class="badge-tag badge-new">✨ Novidade</span>`;
 
-         
                 const itemPrice = item.price !== undefined ? item.price : data.price;
 
                 return `
@@ -492,10 +499,10 @@
         }
 
         // --- LOCAL STORAGE  ---
-        function saveCart() { localStorage.setItem('iceCreamCart', JSON.stringify(cart)); }
+        function saveCart() { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
 
         function loadCart() {
-            const saved = localStorage.getItem('iceCreamCart');
+            const saved = localStorage.getItem(CART_KEY);
             if (saved) {
                 try {
                     const parsedCart = JSON.parse(saved);
@@ -504,20 +511,20 @@
                     
                     if (isOldVersion) {
                         console.warn("Versão antiga do carrinho detectada. Resetando...");
-                        localStorage.removeItem('iceCreamCart');
+                        localStorage.removeItem(CART_KEY);
                         cart = {};
                         return;
                     }
 
                     cart = parsedCart;
                     for (let flavor in cart) {
-                        const safeId = flavor.replace(/\s+/g, '-').toLowerCase();
+                        const safeId = flavor.replace(/\s+/g, '-').replace(/[()]/g, '').toLowerCase();
                         updateCardVisual(safeId, cart[flavor].qty);
                     }
                     updateOrderBar();
                 } catch (e) {
                     console.error("Erro ao carregar carrinho", e);
-                    localStorage.removeItem('iceCreamCart');
+                    localStorage.removeItem(CART_KEY);
                     cart = {};
                 }
             }
@@ -580,7 +587,7 @@
                 const item = cart[flavor];
                 const itemTotal = item.qty * item.price;
                 total += itemTotal;
-                const safeId = flavor.replace(/\s+/g, '-').toLowerCase();
+                const safeId = flavor.replace(/\s+/g, '-').replace(/[()]/g, '').toLowerCase();
 
                 container.innerHTML += `
                     <div class="cart-item">
@@ -600,14 +607,13 @@
             document.getElementById('modal-total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
         }
 
-        // --- FINALIZAR PEDIDO  ---
+        // --- FINALIZAR PEDIDO ---
         function finalizeOrder() {
             if (Object.keys(cart).length === 0) return alert("Adicione itens antes de pedir!");
 
             let message = "Olá! Gostaria de fazer um pedido 🍦\n";
             let total = 0;
             
-            // Agrupar itens por categoria
             let groups = {};
             for (let flavor in cart) {
                 let item = cart[flavor];
@@ -616,7 +622,6 @@
                 total += item.qty * item.price;
             }
 
-            // Montar mensagem
             for (let category in groups) {
                 message += `\n*${category}*\n`;
                 groups[category].forEach(item => {
@@ -704,4 +709,3 @@
     </script>
 </body>
 </html>
-
