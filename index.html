@@ -706,6 +706,53 @@
         }
 
         init();
+
+
+     // --- INTEGRAÇÃO COM A API ---
+async function testarApiDoJaider() {
+    console.log("1. Batendo na porta para pegar o Token...");
+    
+    try {
+        // Login
+        const loginResponse = await fetch('https://didisys-api.onrender.com/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: "client",
+                password: "yP_ddF@s13"
+            })
+        });
+
+        if (!loginResponse.ok) throw new Error("Falha no Login");
+        
+        const loginData = await loginResponse.json();
+        const token = loginData.accessToken;
+        
+        console.log("2. Token recebido com sucesso! Vamos buscar os doces...");
+
+        // Passo 2: Usar o Token para buscar os produtos
+        const productsResponse = await fetch('https://didisys-api.onrender.com/products', {
+            method: 'GET',
+            headers: {
+               
+                'Authorization': `Bearer ${token}`, 
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!productsResponse.ok) throw new Error("Falha ao buscar produtos");
+
+        const listaDeProdutos = await productsResponse.json();
+        
+        console.log("3. SUCESSO! 🎉 Olha o que veio do sistema do Jaider:");
+        console.table(listaDeProdutos); 
+
+    } catch (error) {
+        console.error("Ops, deu algum erro na conexão:", error);
+    }
+}
+
+testarApiDoJaider();
     </script>
 </body>
 </html>
