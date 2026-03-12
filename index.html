@@ -114,10 +114,11 @@
             padding: 8px 18px; border-radius: 50px; white-space: nowrap; cursor: pointer;
             transition: all 0.3s ease; font-family: var(--font-heading); font-weight: 600;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            flex-shrink: 0; 
         }
         .filter-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 4px 10px rgba(232, 67, 147, 0.3); }
 
-        /* --- CARDS DE PRODUTO --- */
+        /* --- CARDS DE PRODUTO E ESTOQUE --- */
         .menu-section { margin-bottom: 30px; }
         .section-title { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; margin-bottom: 16px; color: var(--text-main); border-left: 5px solid var(--primary); padding-left: 12px; }
         .product-list { display: flex; flex-direction: column; gap: 12px; }
@@ -129,6 +130,8 @@
             transition: background-color 0.3s, border-color 0.3s; position: relative; z-index: 2;
         }
         .product-card.has-items { border-color: var(--success-border); background-color: var(--success-bg); }
+        .esgotado-opaco { opacity: 0.6; filter: grayscale(0.5); }
+
         .product-info { flex: 1; padding-right: 10px; }
         .product-info h3 { font-size: 1.1rem; margin-bottom: 4px; color: var(--text-main); line-height: 1.2; }
         .product-price { font-weight: 700; color: var(--secondary); font-size: 1.1rem; font-family: var(--font-heading); }
@@ -139,6 +142,7 @@
         }
         .badge-best { background: #FFC312; color: #5a4b08; }
         .badge-new { background: #4ECDC4; color: #164b46; }
+        .badge-esgotado { background: #ff7675; color: #721c24; }
 
         .quantity-controls {
             display: flex; align-items: center; gap: 10px;
@@ -150,7 +154,7 @@
             font-size: 1.2rem; font-weight: bold; cursor: pointer;
             display: flex; align-items: center; justify-content: center; transition: transform 0.1s;
         }
-        .qty-btn:active { transform: scale(0.9); }
+        .qty-btn:active:not(:disabled) { transform: scale(0.9); }
         .btn-minus { background: transparent; color: var(--text-muted); }
         .btn-plus { background: var(--success-border); color: white; box-shadow: 0 2px 5px rgba(46, 204, 113, 0.4); }
         .qty-display { font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; width: 24px; text-align: center; color: var(--text-main); }
@@ -188,9 +192,9 @@
         .order-bar {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%);
             width: 90%; max-width: 440px;
-            background-color: #25D366; color: white;
-            border-radius: 16px; display: flex; align-items: center; justify-content: space-between;
-            padding: 16px 24px; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+            background-color: #d9a23d; 
+            color: white; border-radius: 16px; display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 24px; box-shadow: 0 10px 30px rgba(217, 162, 61, 0.4);
             cursor: pointer; z-index: 100; opacity: 0; pointer-events: none;
             text-decoration: none;
         }
@@ -231,7 +235,8 @@
         .cart-total-row { display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 800; margin-bottom: 15px; color: var(--text-main); }
         
         .btn-finalize {
-            width: 100%; background: #25D366; color: white; border: none; padding: 16px;
+            width: 100%; background: #d9a23d;
+            color: white; border: none; padding: 16px;
             border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 10px;
             transition: background 0.2s;
@@ -267,24 +272,36 @@
         </nav>
 
         <div id="menu-container">
-            <section class="menu-section cat-sobremesa" data-category="sobremesa">
+            <div id="loading-message" style="text-align: center; padding: 50px 20px;">
+                <i class="ph ph-spinner-gap" style="font-size: 3.5rem; color: var(--primary); animation: spin 1s linear infinite;"></i>
+                <p style="margin-top: 15px; color: var(--text-muted); font-weight: bold; font-family: var(--font-heading); font-size: 1.2rem;">Buscando as delícias de hoje...</p>
+                <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
+            </div>
+
+            <div id="empty-message" style="text-align: center; padding: 40px 20px; display: none;">
+                <i class="ph ph-storefront" style="font-size: 4rem; color: #b2bec3;"></i>
+                <h3 style="color: var(--text-main); margin-top: 15px;">Cardápio em Atualização</h3>
+                <p style="color: var(--text-muted);">Estamos preparando delícias fresquinhas. Volte em alguns minutinhos!</p>
+            </div>
+
+            <section class="menu-section cat-sobremesa" data-category="sobremesa" style="display: none;">
                 <h2 class="section-title"><i class="ph ph-cake" style="color:#d980fa"></i> Doces & Bolos</h2>
                 <div class="product-list" id="list-sobremesa"></div>
             </section>
             
-            <section class="menu-section cat-suco" data-category="suco">
+            <section class="menu-section cat-suco" data-category="suco" style="display: none;">
                 <h2 class="section-title"><i class="ph ph-drop" style="color:#ff9f43"></i> Geladinho Suco</h2>
                 <div class="product-list" id="list-suco"></div>
             </section>
-            <section class="menu-section cat-suco" data-category="suco">
+            <section class="menu-section cat-suco" data-category="suco" style="display: none;">
                 <h2 class="section-title"><i class="ph ph-plant" style="color:#2ecc71"></i> Suco Natural</h2>
                 <div class="product-list" id="list-natural"></div>
             </section>
-            <section class="menu-section cat-gourmet" data-category="gourmet">
+            <section class="menu-section cat-gourmet" data-category="gourmet" style="display: none;">
                 <h2 class="section-title"><i class="ph ph-sparkle" style="color:#a55eea"></i> Geladinho Gourmet</h2>
                 <div class="product-list" id="list-gourmet"></div>
             </section>
-            <section class="menu-section cat-sorvete" data-category="sorvete">
+            <section class="menu-section cat-sorvete" data-category="sorvete" style="display: none;">
                 <h2 class="section-title"><i class="ph ph-ice-cream" style="color:#eb3b5a"></i> Sorvete Gourmet</h2>
                 <div class="product-list" id="list-sorvete"></div>
             </section>
@@ -358,111 +375,147 @@
         const WHATSAPP_NUMBER = "5511986028635"; 
 
         const menuData = {
-            // --- CATEGORIA NOVA ATUALIZADA COM OS NOVOS DOCES ---
-            sobremesas: { price: 0, flavors: [
-                { name: "Pavê c/ bolacha sabor creme (160g)", tag: "", price: 4.50 },
-                { name: "Pavê c/ bolacha sabor chocolate (160g)", tag: "", price: 5.00 },
-                { name: "Bolo no pote sabor 2 Amores (200g)", tag: "", price: 8.00 },
-                { name: "Bolo no pote sabor Brigadeiro (200g)", tag: "", price: 8.50 },
-                { name: "Bolo no pote sabor Ninho c/ Nutella (200g)", tag: "", price: 8.00 },
-                { name: "Bolo no pote sabor Ninho c/ geléia de morango (200g)", tag: "", price: 8.00 },
-                { name: "Bolo de cenoura c/ cobertura de chocolate (Fatia 160g)", tag: "Novidade", price: 5.50 },
-                { name: "Mini bolo no pote sabor Brigadeiro (90g)", tag: "", price: 4.50 },
-                { name: "Mini bolo no pote sabor Ninho c/ geléia de morango (90g)", tag: "", price: 4.50 },
-                { name: "Mini bolo no pote sabor Nutella (90g)", tag: "", price: 4.50 },
-                { name: "Mini bolo no pote sabor Ninho c/ Nutella (90g)", tag: "", price: 4.50 },
-                { name: "Mini pudim de leite (120g)", tag: "Novidade", price: 8.00 },
-                { name: "Quarteto festa (Brig., Bicho de pé, Beijinho e Ninho) - 120g", tag: "Novidade", price: 12.00 },
-                { name: "Brigadeiro gourmet individual (30g)", tag: "", price: 3.00 }
-            ]},
-            
-            // --- GELADINHOS AGORA COM PESO (110ml) ---
-            suco: { price: 1.50, flavors: [
-                { name: "Abacaxi (110ml)", tag: "" },
-                { name: "Uva (110ml)", tag: "" },
-                { name: "Morango (110ml)", tag: "" },
-                { name: "Azul Espacial (110ml)", tag: "" },
-                { name: "Limão (110ml)", tag: "" },
-                { name: "Goiaba (110ml)", tag: "" },
-                { name: "Laranja (110ml)", tag: "" }
-            ]},
-            natural: { price: 2.00, flavors: [
-                { name: "Manga (110ml)", tag: "" },
-                { name: "Goiaba (110ml)", tag: "Novidade" },
-                { name: "Abacaxi (110ml)", tag: "Novidade" },
-                { name: "Maracujá (110ml)", tag: "Novidade" },
-                { name: "Morango (110ml)", tag: "Novidade" }
-            ]},
-            gourmet: { price: 3.50, flavors: [
-                { name: "Brigadeiro (110ml)", tag: "" },
-                { name: "Coco (110ml)", tag: "" },
-                { name: "Chocolate (110ml)", tag: "Mais Vendido" },
-                { name: "Pudim de Leite (110ml)", tag: "" }, 
-                { name: "Romeu e Julieta (110ml)", tag: "" },
-                { name: "Doce de Leite (110ml)", tag: "" },
-                { name: "Goiaba Cremosa (110ml)", tag: "" },
-                { name: "Abacaxi com Vinho (110ml)", tag: "Novidade" },
-                { name: "Mousse Morango Trufado (110ml)", tag: "" },
-                { name: "Mousse Uva Trufado (110ml)", tag: "" },
-                { name: "Mousse Limão c/ Chocolate Branco (110ml)", tag: "" },
-                { name: "Abacaxi com Coco (110ml)", tag: "Novidade" },
-                { name: "Abacaxi com Doce de Leite (110ml)", tag: "Novidade" },
-                { name: "Ninho Trufado (110ml)", tag: "" },
-                { name: "Maracujá Trufado (110ml)", tag: "" },
-                { name: "Doce de Leite com Ameixa (110ml)", tag: "" },
-                { name: "Ninho c/ Nutella (110ml)", tag: "Mais Vendido" },
-                { name: "Ninho c/ Morango (110ml)", tag: "" },
-                { name: "Maçã do Amor (110ml)", tag: "" },
-                { name: "Paçoca Trufada (110ml)", tag: "Mais Vendido" },
-                { name: "Chocolate Trufado (110ml)", tag: "" },
-                { name: "Prestígio (110ml)", tag: "Novidade" }
-            ]},
-            sorvete: { price: 4.00, flavors: [
-                { name: "Abacaxi c/ Doce de Leite", tag: "" },
-                { name: "Abacaxi ao Vinho", tag: "" },
-                { name: "Passas ao Rum", tag: "" },
-                { name: "Maracujá c/ Caramelo", tag: "" },
-                { name: "Chocolate c/ Morango", tag: "" },
-                { name: "Morango", tag: "Novidade" }
-            ]}
+            sobremesas: { price: 0, flavors: [] },
+            suco: { price: 0, flavors: [] },
+            natural: { price: 0, flavors: [] },
+            gourmet: { price: 0, flavors: [] },
+            sorvete: { price: 0, flavors: [] }
         };
 
         let cart = {}; 
-        const CART_KEY = 'didiliciasCart_v2'; // PULO DO GATO: Nome novo para o carrinho não bugar com a versão anterior!
+        const CART_KEY = 'didiliciasCart_v2'; 
 
-        // --- INICIALIZAÇÃO ---
+        // --- INICIALIZAÇÃO DA ARQUITETURA ---
         function init() {
+            checkOpeningHours();
+            carregarCardapioDaAPI(); 
+        }
+
+        // --- INTEGRAÇÃO REAL COM A API ---
+        async function carregarCardapioDaAPI() {
+            try {
+                const loginRes = await fetch('https://didisys-api.onrender.com/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: "client", password: "yP_ddF@s13" })
+                });
+                
+                if (!loginRes.ok) throw new Error("Erro no login");
+                const { accessToken } = await loginRes.json();
+
+                const prodRes = await fetch('https://didisys-api.onrender.com/products', {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+                
+                if (!prodRes.ok) throw new Error("Erro na lista");
+                const produtosDaAPI = await prodRes.json();
+
+                menuData.sobremesas.flavors = [];
+                menuData.suco.flavors = [];
+                menuData.natural.flavors = [];
+                menuData.gourmet.flavors = [];
+                menuData.sorvete.flavors = [];
+
+                produtosDaAPI.forEach(produto => {
+                    const item = {
+                        name: produto.nome,
+                        price: produto.preco,
+                        quantidade: produto.quantidade, 
+                        tag: "" 
+                    };
+
+                    const tipoDoJaider = produto.tipo.toLowerCase();
+
+                    if (tipoDoJaider.includes('bolo') || tipoDoJaider.includes('sobremesa') || tipoDoJaider.includes('doce')) {
+                        menuData.sobremesas.flavors.push(item);
+                    } else if (tipoDoJaider === 'geladinho natural') {
+                        menuData.natural.flavors.push(item);
+                    } else if (tipoDoJaider === 'geladinho gourmet') {
+                        menuData.gourmet.flavors.push(item);
+                    } else if (tipoDoJaider === 'geladinho' || tipoDoJaider.includes('suco')) {
+                        menuData.suco.flavors.push(item);
+                    } else if (tipoDoJaider.includes('sorvete')) {
+                        menuData.sorvete.flavors.push(item);
+                    }
+                });
+
+                renderizarTudo();
+
+            } catch (error) {
+                console.warn("⚠️ API fora do ar. Usando cardápio de segurança off-line:", error);
+                renderizarTudo(); 
+            }
+        }
+
+        // --- DESENHAR O CARDÁPIO NA TELA ---
+        function renderizarTudo() {
+            document.getElementById('loading-message').style.display = 'none';
+
+            // Conta quantos produtos existem no total
+            const totalProdutos = menuData.sobremesas.flavors.length + 
+                                  menuData.suco.flavors.length + 
+                                  menuData.natural.flavors.length + 
+                                  menuData.gourmet.flavors.length + 
+                                  menuData.sorvete.flavors.length;
+
+            if (totalProdutos === 0) {
+                document.getElementById('empty-message').style.display = 'block';
+            } else {
+                document.getElementById('empty-message').style.display = 'none';
+            }
+
             renderItems('list-sobremesa', menuData.sobremesas, 'Doces & Bolos 🍰');
             renderItems('list-suco', menuData.suco, 'Geladinho Suco 🍊');
             renderItems('list-natural', menuData.natural, 'Suco Natural 🍃');
             renderItems('list-gourmet', menuData.gourmet, 'Geladinho Gourmet 🍫');
             renderItems('list-sorvete', menuData.sorvete, 'Sorvete de Massa 🍦');
-            checkOpeningHours();
+            
             loadCart(); 
         }
 
-        // --- RENDERIZAÇÃO ---
+        // --- RENDERIZAÇÃO INTELIGENTE COM ESTOQUE ---
         function renderItems(listId, data, categoryName) {
             const list = document.getElementById(listId);
+            const section = list.closest('.menu-section');
+            
+            if (!data.flavors || data.flavors.length === 0) {
+                section.style.display = 'none';
+                return;
+            } else {
+                section.style.display = 'block';
+            }
+
             list.innerHTML = data.flavors.map(item => {
                 const safeId = item.name.replace(/\s+/g, '-').replace(/[()]/g, '').toLowerCase();
                 let badgeHtml = '';
-                if (item.tag === 'Mais Vendido') badgeHtml = `<span class="badge-tag badge-best">★ Mais Vendido</span>`;
-                if (item.tag === 'Novidade') badgeHtml = `<span class="badge-tag badge-new">✨ Novidade</span>`;
+                
+                const isEsgotado = item.quantidade === 0;
+                
+                if (isEsgotado) {
+                    badgeHtml = `<span class="badge-tag badge-esgotado">🚫 Esgotado</span>`;
+                } else if (item.tag === 'Mais Vendido') {
+                    badgeHtml = `<span class="badge-tag badge-best">★ Mais Vendido</span>`;
+                } else if (item.tag === 'Novidade') {
+                    badgeHtml = `<span class="badge-tag badge-new">✨ Novidade</span>`;
+                }
 
                 const itemPrice = item.price !== undefined ? item.price : data.price;
 
+                const btnPlus = isEsgotado 
+                    ? `<button class="qty-btn btn-plus" style="background: #ccc; cursor: not-allowed;" disabled><i class="ph ph-plus"></i></button>`
+                    : `<button class="qty-btn btn-plus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${itemPrice}, 1)"><i class="ph ph-plus"></i></button>`;
+
                 return `
-                <div class="product-card" id="card-${safeId}">
+                <div class="product-card ${isEsgotado ? 'esgotado-opaco' : ''}" id="card-${safeId}">
                     <div class="product-info">
                         ${badgeHtml}
                         <h3>${item.name}</h3>
                         <div class="product-price">R$ ${itemPrice.toFixed(2).replace('.', ',')}</div>
                     </div>
                     <div class="quantity-controls">
-                        <button class="qty-btn btn-minus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${itemPrice}, -1)"><i class="ph ph-minus"></i></button>
+                        <button class="qty-btn btn-minus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${itemPrice}, -1)" ${isEsgotado ? 'disabled' : ''}><i class="ph ph-minus"></i></button>
                         <span class="qty-display hidden" id="qty-${safeId}">0</span>
-                        <button class="qty-btn btn-plus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${itemPrice}, 1)"><i class="ph ph-plus"></i></button>
+                        ${btnPlus}
                     </div>
                 </div>
             `}).join('');
@@ -498,7 +551,6 @@
             }
         }
 
-        // --- LOCAL STORAGE  ---
         function saveCart() { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
 
         function loadCart() {
@@ -506,11 +558,9 @@
             if (saved) {
                 try {
                     const parsedCart = JSON.parse(saved);
-                    
                     const isOldVersion = Object.values(parsedCart).some(item => !item.category);
                     
                     if (isOldVersion) {
-                        console.warn("Versão antiga do carrinho detectada. Resetando...");
                         localStorage.removeItem(CART_KEY);
                         cart = {};
                         return;
@@ -523,7 +573,6 @@
                     }
                     updateOrderBar();
                 } catch (e) {
-                    console.error("Erro ao carregar carrinho", e);
                     localStorage.removeItem(CART_KEY);
                     cart = {};
                 }
@@ -707,52 +756,6 @@
 
         init();
 
-
-     // --- INTEGRAÇÃO COM A API ---
-async function testarApiDoJaider() {
-    console.log("1. Batendo na porta para pegar o Token...");
-    
-    try {
-        // Login
-        const loginResponse = await fetch('https://didisys-api.onrender.com/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: "client",
-                password: "yP_ddF@s13"
-            })
-        });
-
-        if (!loginResponse.ok) throw new Error("Falha no Login");
-        
-        const loginData = await loginResponse.json();
-        const token = loginData.accessToken;
-        
-        console.log("2. Token recebido com sucesso! Vamos buscar os doces...");
-
-        // Passo 2: Usar o Token para buscar os produtos
-        const productsResponse = await fetch('https://didisys-api.onrender.com/products', {
-            method: 'GET',
-            headers: {
-               
-                'Authorization': `Bearer ${token}`, 
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!productsResponse.ok) throw new Error("Falha ao buscar produtos");
-
-        const listaDeProdutos = await productsResponse.json();
-        
-        console.log("3. SUCESSO! 🎉 Olha o que veio do sistema do Jaider:");
-        console.table(listaDeProdutos); 
-
-    } catch (error) {
-        console.error("Ops, deu algum erro na conexão:", error);
-    }
-}
-
-testarApiDoJaider();
     </script>
 </body>
 </html>
