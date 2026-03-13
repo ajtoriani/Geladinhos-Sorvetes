@@ -4,18 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-   <meta name="description" content="Cardápio Digital Interativo. Escolha sabores de Geladinho Gourmet, Sucos Naturais, Sorvetes e Sobremesas. Entrega rápida e refrescância pura em Guarulhos! 😋">
+    <meta name="description" content="Cardápio Digital Interativo. Escolha sabores de Geladinho Gourmet, Sucos Naturais, Sorvetes e Sobremesas. Entrega rápida e refrescância pura em Guarulhos! 😋">
     <meta name="keywords" content="geladinho gourmet, sorvete, bolo de pote, pavê, sobremesa, delivery, guarulhos, vila santa maria, cardápio digital, doce">
     <meta name="author" content="AJ Toriani - Tech & Design">
     <meta name="robots" content="index, follow">
 
-    <meta property="og:title" content="Didilicias Gourmet 🍦">
+    <meta property="og:title" content="Didilicias Doces 🍦">
     <meta property="og:description" content="Bateu aquela vontade de doce? 👀 Clique, escolha seu sabor favorito e peça direto pelo WhatsApp! Entrega rápida.">
-    
     <meta property="og:image" content="https://geladinhosesorvetes.vercel.app/img/capa-whatsapp.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    
     <meta property="og:url" content="https://geladinhosesorvetes.vercel.app">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_BR">
@@ -25,7 +23,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="#e84393">
     <meta name="msapplication-navbutton-color" content="#e84393">
 
-     <title>Didilicias Gourmet</title>
+    <title>Didilicias Doces</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,13 +34,13 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        /* --- CONFIGURAÇÕES VISUAIS --- */
+        /* --- CONFIGURACOES VISUAIS --- */
         :root {
             --bg-body: #F0F4F8;
             --bg-card: #FFFFFF;
-            --primary: #FFC312; /* Amarelo Gema */
-            --secondary: #e84393; /* Rosa Framboesa */
-            --danger: #EA2027; /* Vermelho apenas para erros/fechado */
+            --primary: #FFC312;
+            --secondary: #e84393;
+            --danger: #EA2027;
             --text-main: #2d3436;
             --text-muted: #636e72;
             --success-bg: #dff9fb;
@@ -61,7 +59,6 @@
             font-family: var(--font-body);
             line-height: 1.6;
             padding-bottom: 120px;
-            
             background-image: 
                 radial-gradient(circle at 0% 0%, rgba(255, 242, 0, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 100% 50%, rgba(0, 184, 255, 0.1) 0%, transparent 50%),
@@ -79,7 +76,6 @@
         .highlight { color: var(--primary); -webkit-text-stroke: 1px #e1b12c; }
         .tagline { color: var(--text-muted); font-size: 1rem; margin-bottom: 15px; }
         
-        /* Status Badge */
         .status-badge {
             display: inline-flex; align-items: center; gap: 6px;
             background: white; padding: 6px 14px; border-radius: 20px;
@@ -107,7 +103,7 @@
         }
 
         /* --- NAV FILTROS --- */
-        .category-nav { display: flex; gap: 12px; overflow-x: auto; padding: 10px 20px 20px; margin: 0 -20px; scrollbar-width: none; }
+        .category-nav { display: flex; gap: 12px; overflow-x: auto; padding: 10px 20px 20px; margin: 0 -20px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .category-nav::-webkit-scrollbar { display: none; }
         .filter-btn {
             background: var(--bg-card); color: var(--text-muted); border: 1px solid #dfe6e9;
@@ -118,7 +114,7 @@
         }
         .filter-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 4px 10px rgba(232, 67, 147, 0.3); }
 
-        /* --- CARDS DE PRODUTO E ESTOQUE --- */
+        /* --- CARDS E PRODUTOS --- */
         .menu-section { margin-bottom: 30px; }
         .section-title { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; margin-bottom: 16px; color: var(--text-main); border-left: 5px solid var(--primary); padding-left: 12px; }
         .product-list { display: flex; flex-direction: column; gap: 12px; }
@@ -192,7 +188,7 @@
         .order-bar {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%);
             width: 90%; max-width: 440px;
-            background-color: #d9a23d; 
+            background-color: #d9a23d;
             color: white; border-radius: 16px; display: flex; align-items: center; justify-content: space-between;
             padding: 16px 24px; box-shadow: 0 10px 30px rgba(217, 162, 61, 0.4);
             cursor: pointer; z-index: 100; opacity: 0; pointer-events: none;
@@ -204,7 +200,7 @@
         .order-count { font-size: 0.85rem; opacity: 0.9; }
         .order-action { display: flex; align-items: center; gap: 8px; font-weight: 700; font-family: var(--font-heading); background: rgba(0,0,0,0.1); padding: 8px 12px; border-radius: 8px; }
 
-        /* --- CARRINHO / BOTTOM SHEET --- */
+        /* --- CARRINHO --- */
         .cart-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 999;
@@ -250,7 +246,7 @@
 
     <div class="container">
         <header>
-            <div class="logo">🍦<br>Didilicias<br><span class="highlight">Gourmet</span></div>
+            <div class="logo">🍦<br>Didilicias<br><span class="highlight">Doces</span></div>
             <p class="tagline">Refrescância Pura & Sabores Artesanais</p>
             
             <div id="store-status" class="status-badge">
@@ -266,8 +262,9 @@
         <nav class="category-nav">
             <button class="filter-btn active" onclick="filterMenu('all')">Todos</button>
             <button class="filter-btn" onclick="filterMenu('sobremesa')">Doces & Bolos</button>
-            <button class="filter-btn" onclick="filterMenu('suco')">Sucos</button>
-            <button class="filter-btn" onclick="filterMenu('gourmet')">Gourmet</button>
+            <button class="filter-btn" onclick="filterMenu('suco')">Tradicionais</button>
+            <button class="filter-btn" onclick="filterMenu('natural')">Zero Lactose</button>
+            <button class="filter-btn" onclick="filterMenu('gourmet')">Geladinho Gourmet</button>
             <button class="filter-btn" onclick="filterMenu('sorvete')">Sorvetes</button>
         </nav>
 
@@ -290,11 +287,11 @@
             </section>
             
             <section class="menu-section cat-suco" data-category="suco" style="display: none;">
-                <h2 class="section-title"><i class="ph ph-drop" style="color:#ff9f43"></i> Geladinho Suco</h2>
+                <h2 class="section-title"><i class="ph ph-drop" style="color:#ff9f43"></i> Geladinho Tradicional</h2>
                 <div class="product-list" id="list-suco"></div>
             </section>
-            <section class="menu-section cat-suco" data-category="suco" style="display: none;">
-                <h2 class="section-title"><i class="ph ph-plant" style="color:#2ecc71"></i> Suco Natural</h2>
+            <section class="menu-section cat-natural" data-category="natural" style="display: none;">
+                <h2 class="section-title"><i class="ph ph-plant" style="color:#2ecc71"></i> Geladinho da Fruta (Zero Lactose)</h2>
                 <div class="product-list" id="list-natural"></div>
             </section>
             <section class="menu-section cat-gourmet" data-category="gourmet" style="display: none;">
@@ -372,6 +369,7 @@
     </div>
 
     <script>
+        // --- VARIAVEIS GERAIS ---
         const WHATSAPP_NUMBER = "5511986028635"; 
 
         const menuData = {
@@ -385,13 +383,13 @@
         let cart = {}; 
         const CART_KEY = 'didiliciasCart_v2'; 
 
-        // --- INICIALIZAÇÃO DA ARQUITETURA ---
+        // --- INICIALIZACAO ---
         function init() {
             checkOpeningHours();
             carregarCardapioDaAPI(); 
         }
 
-        // --- INTEGRAÇÃO REAL COM A API ---
+        // --- API INTEGRATION ---
         async function carregarCardapioDaAPI() {
             try {
                 const loginRes = await fetch('https://didisys-api.onrender.com/auth/login', {
@@ -426,32 +424,42 @@
 
                     const tipoDoJaider = produto.tipo.toLowerCase();
 
-                    if (tipoDoJaider.includes('bolo') || tipoDoJaider.includes('sobremesa') || tipoDoJaider.includes('doce')) {
+                    if (tipoDoJaider.includes('bolo') || tipoDoJaider.includes('doce') || tipoDoJaider.includes('sobremesa')) {
                         menuData.sobremesas.flavors.push(item);
-                    } else if (tipoDoJaider === 'geladinho natural') {
+                    } else if (tipoDoJaider.includes('natural') || tipoDoJaider.includes('fruta') || tipoDoJaider.includes('zero lactose')) {
                         menuData.natural.flavors.push(item);
-                    } else if (tipoDoJaider === 'geladinho gourmet') {
+                    } else if (tipoDoJaider.includes('gourmet')) {
                         menuData.gourmet.flavors.push(item);
-                    } else if (tipoDoJaider === 'geladinho' || tipoDoJaider.includes('suco')) {
-                        menuData.suco.flavors.push(item);
                     } else if (tipoDoJaider.includes('sorvete')) {
                         menuData.sorvete.flavors.push(item);
+                    } else {
+                        menuData.suco.flavors.push(item);
                     }
+                });
+
+                // --- ORDENACAO: ESGOTADOS POR ULTIMO ---
+                Object.keys(menuData).forEach(categoria => {
+                    menuData[categoria].flavors.sort((a, b) => {
+                        const aEsgotado = a.quantidade === 0;
+                        const bEsgotado = b.quantidade === 0;
+                        if (aEsgotado && !bEsgotado) return 1;
+                        if (!aEsgotado && bEsgotado) return -1;
+                        return 0;
+                    });
                 });
 
                 renderizarTudo();
 
             } catch (error) {
-                console.warn("⚠️ API fora do ar. Usando cardápio de segurança off-line:", error);
+                console.warn("API Error:", error);
                 renderizarTudo(); 
             }
         }
 
-        // --- DESENHAR O CARDÁPIO NA TELA ---
+        // --- RENDERIZACAO ---
         function renderizarTudo() {
             document.getElementById('loading-message').style.display = 'none';
 
-            // Conta quantos produtos existem no total
             const totalProdutos = menuData.sobremesas.flavors.length + 
                                   menuData.suco.flavors.length + 
                                   menuData.natural.flavors.length + 
@@ -465,15 +473,14 @@
             }
 
             renderItems('list-sobremesa', menuData.sobremesas, 'Doces & Bolos 🍰');
-            renderItems('list-suco', menuData.suco, 'Geladinho Suco 🍊');
-            renderItems('list-natural', menuData.natural, 'Suco Natural 🍃');
+            renderItems('list-suco', menuData.suco, 'Geladinho Tradicional 🧊');
+            renderItems('list-natural', menuData.natural, 'Geladinho da Fruta (Zero Lactose) 🍃');
             renderItems('list-gourmet', menuData.gourmet, 'Geladinho Gourmet 🍫');
-            renderItems('list-sorvete', menuData.sorvete, 'Sorvete de Massa 🍦');
+            renderItems('list-sorvete', menuData.sorvete, 'Sorvete Gourmet 🍦');
             
             loadCart(); 
         }
 
-        // --- RENDERIZAÇÃO INTELIGENTE COM ESTOQUE ---
         function renderItems(listId, data, categoryName) {
             const list = document.getElementById(listId);
             const section = list.closest('.menu-section');
@@ -521,7 +528,7 @@
             `}).join('');
         }
 
-        // --- LÓGICA DO CARRINHO ---
+        // --- CARRINHO LOGICA ---
         function updateQty(category, flavor, safeId, price, change) {
             if (!cart[flavor]) {
                 cart[flavor] = { qty: 0, price: price, category: category };
@@ -579,7 +586,7 @@
             }
         }
 
-        // --- BARRA FLUTUANTE ---
+        // --- BARRA FLUTUANTE DE PEDIDO ---
         function updateOrderBar() {
             let total = 0; let count = 0;
             for (let item in cart) {
@@ -601,7 +608,7 @@
             }
         }
 
-        // --- MODAL / BOTTOM SHEET ---
+        // --- MODAL DO CARRINHO ---
         function toggleCart(open) {
             const modal = document.getElementById('cart-modal');
             if (open) {
@@ -656,7 +663,7 @@
             document.getElementById('modal-total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
         }
 
-        // --- FINALIZAR PEDIDO ---
+        // --- FINALIZACAO WHATSAPP ---
         function finalizeOrder() {
             if (Object.keys(cart).length === 0) return alert("Adicione itens antes de pedir!");
 
@@ -694,7 +701,7 @@
             }, 1000);
         }
 
-        // --- HORÁRIO 12h-20h ---
+        // --- SISTEMA DE HORARIO ---
         function checkOpeningHours() {
             const now = new Date();
             const spTime = now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" });
@@ -713,8 +720,11 @@
             }
         }
 
-        // --- UTILS ---
+        // --- SISTEMA DE BUSCA E FILTROS ---
         function searchMenu() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.filter-btn[onclick="filterMenu(\'all\')"]').classList.add('active');
+
             const query = document.getElementById('search-input').value.toLowerCase();
             const cards = document.querySelectorAll('.product-card');
             const sections = document.querySelectorAll('.menu-section');
@@ -747,6 +757,7 @@
             }});
         }
 
+        // --- COPIA DE ENDERECO ---
         function copyAddress() {
             const address = "Av. Vereador Antônio Grotkowski, 332 - Vila Santa Maria, Guarulhos";
             navigator.clipboard.writeText(address).then(() => {
