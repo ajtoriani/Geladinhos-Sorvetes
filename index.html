@@ -114,21 +114,32 @@
         }
         .filter-btn.active { background: var(--secondary); color: white; border-color: var(--secondary); box-shadow: 0 4px 10px rgba(232, 67, 147, 0.3); }
 
-        /* --- CARDS E PRODUTOS --- */
+        /* --- CARDS E PRODUTOS COM IMAGEM --- */
         .menu-section { margin-bottom: 30px; }
         .section-title { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; margin-bottom: 16px; color: var(--text-main); border-left: 5px solid var(--primary); padding-left: 12px; }
         .product-list { display: flex; flex-direction: column; gap: 12px; }
 
         .product-card {
             background: var(--bg-card); border-radius: var(--radius); padding: 16px;
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; gap: 15px; align-items: center; /* Flex-row para abraçar a imagem */
             box-shadow: var(--shadow); border: 2px solid transparent; 
             transition: background-color 0.3s, border-color 0.3s; position: relative; z-index: 2;
         }
         .product-card.has-items { border-color: var(--success-border); background-color: var(--success-bg); }
         .esgotado-opaco { opacity: 0.6; filter: grayscale(0.5); }
 
-        .product-info { flex: 1; padding-right: 10px; }
+        /* Container da Imagem Base64 */
+        .product-img-wrapper {
+            flex-shrink: 0;
+            width: 70px; height: 70px;
+            border-radius: 12px; overflow: hidden;
+            background: #f1f2f6; display: flex; align-items: center; justify-content: center;
+        }
+        .product-img-wrapper img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+
+        .product-info { flex: 1; padding-right: 5px; }
         .product-info h3 { font-size: 1.1rem; margin-bottom: 4px; color: var(--text-main); line-height: 1.2; }
         .product-price { font-weight: 700; color: var(--secondary); font-size: 1.1rem; font-family: var(--font-heading); }
 
@@ -141,8 +152,8 @@
         .badge-esgotado { background: #ff7675; color: #721c24; }
 
         .quantity-controls {
-            display: flex; align-items: center; gap: 10px;
-            background: #f1f2f6; border-radius: 50px; padding: 4px;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            background: #f1f2f6; border-radius: 50px; padding: 6px 4px; flex-shrink: 0;
         }
         .product-card.has-items .quantity-controls { background: white; }
         .qty-btn {
@@ -153,8 +164,8 @@
         .qty-btn:active:not(:disabled) { transform: scale(0.9); }
         .btn-minus { background: transparent; color: var(--text-muted); }
         .btn-plus { background: var(--success-border); color: white; box-shadow: 0 2px 5px rgba(46, 204, 113, 0.4); }
-        .qty-display { font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; width: 24px; text-align: center; color: var(--text-main); }
-        .qty-display.hidden { opacity: 0.3; }
+        .qty-display { font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem; text-align: center; color: var(--text-main); }
+        .qty-display.hidden { opacity: 0; display: none; } /* Oculta totalmente quando zero */
 
         /* --- CONTACT & LOCATION --- */
         .contact-card {
@@ -259,19 +270,14 @@
             </div>
         </header>
 
-        <nav class="category-nav">
+        <nav class="category-nav" id="dynamic-nav">
             <button class="filter-btn active" onclick="filterMenu('all')">Todos</button>
-            <button class="filter-btn" onclick="filterMenu('sobremesa')">Doces & Bolos</button>
-            <button class="filter-btn" onclick="filterMenu('suco')">Tradicionais</button>
-            <button class="filter-btn" onclick="filterMenu('natural')">Zero Lactose</button>
-            <button class="filter-btn" onclick="filterMenu('gourmet')">Geladinho Gourmet</button>
-            <button class="filter-btn" onclick="filterMenu('sorvete')">Sorvetes</button>
-        </nav>
+            </nav>
 
         <div id="menu-container">
             <div id="loading-message" style="text-align: center; padding: 50px 20px;">
                 <i class="ph ph-spinner-gap" style="font-size: 3.5rem; color: var(--primary); animation: spin 1s linear infinite;"></i>
-                <p style="margin-top: 15px; color: var(--text-muted); font-weight: bold; font-family: var(--font-heading); font-size: 1.2rem;">Buscando as delícias de hoje...</p>
+                <p style="margin-top: 15px; color: var(--text-muted); font-weight: bold; font-family: var(--font-heading); font-size: 1.2rem;">Montando vitrine deliciosa...</p>
                 <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
             </div>
 
@@ -281,27 +287,8 @@
                 <p style="color: var(--text-muted);">Estamos preparando delícias fresquinhas. Volte em alguns minutinhos!</p>
             </div>
 
-            <section class="menu-section cat-sobremesa" data-category="sobremesa" style="display: none;">
-                <h2 class="section-title"><i class="ph ph-cake" style="color:#d980fa"></i> Doces & Bolos</h2>
-                <div class="product-list" id="list-sobremesa"></div>
-            </section>
-            
-            <section class="menu-section cat-suco" data-category="suco" style="display: none;">
-                <h2 class="section-title"><i class="ph ph-drop" style="color:#ff9f43"></i> Geladinho Tradicional</h2>
-                <div class="product-list" id="list-suco"></div>
-            </section>
-            <section class="menu-section cat-natural" data-category="natural" style="display: none;">
-                <h2 class="section-title"><i class="ph ph-plant" style="color:#2ecc71"></i> Geladinho da Fruta (Zero Lactose)</h2>
-                <div class="product-list" id="list-natural"></div>
-            </section>
-            <section class="menu-section cat-gourmet" data-category="gourmet" style="display: none;">
-                <h2 class="section-title"><i class="ph ph-sparkle" style="color:#a55eea"></i> Geladinho Gourmet</h2>
-                <div class="product-list" id="list-gourmet"></div>
-            </section>
-            <section class="menu-section cat-sorvete" data-category="sorvete" style="display: none;">
-                <h2 class="section-title"><i class="ph ph-ice-cream" style="color:#eb3b5a"></i> Sorvete Gourmet</h2>
-                <div class="product-list" id="list-sorvete"></div>
-            </section>
+            <div id="dynamic-sections">
+                </div>
         </div>
 
         <div class="contact-card">
@@ -372,74 +359,108 @@
         // --- VARIAVEIS GERAIS ---
         const WHATSAPP_NUMBER = "5511986028635"; 
 
-        const menuData = {
-            sobremesas: { price: 0, flavors: [] },
-            suco: { price: 0, flavors: [] },
-            natural: { price: 0, flavors: [] },
-            gourmet: { price: 0, flavors: [] },
-            sorvete: { price: 0, flavors: [] }
+        // O nosso Dicionário de UX (Traduz a API para os nomes bonitos da tela)
+        const categoryTranslations = {
+            "Geladinho Natural": "Geladinho da Fruta (Zero Lactose)",
+            "Geladinho Gourmet": "Geladinho Gourmet",
+            "Sorvete": "Sorvetes",
+            "Bolo no pote": "Doces & Bolos",
+            "Doce": "Outros Doces",
+            "Geladinho": "Geladinho Tradicional"
+        };
+        
+        // Icones dinâmicos baseados no nome da categoria
+        const categoryIcons = {
+            "Geladinho Natural": { icon: "ph-plant", color: "#2ecc71" },
+            "Geladinho Gourmet": { icon: "ph-sparkle", color: "#a55eea" },
+            "Sorvete": { icon: "ph-ice-cream", color: "#eb3b5a" },
+            "Bolo no pote": { icon: "ph-cake", color: "#d980fa" },
+            "Doce": { icon: "ph-cookie", color: "#ff9f43" },
+            "Geladinho": { icon: "ph-drop", color: "#0984e3" }
         };
 
+        let dynamicMenuData = {}; // A API vai preencher isso!
         let cart = {}; 
-        const CART_KEY = 'didiliciasCart_v2'; 
+        const CART_KEY = 'didiliciasCart_v3'; 
 
         // --- INICIALIZACAO ---
         function init() {
             checkOpeningHours();
-            carregarCardapioDaAPI(); 
+            carregarTudoDaAPI(); 
         }
 
-        // --- API INTEGRATION ---
-        async function carregarCardapioDaAPI() {
+        // --- API INTEGRATION: BUSCANDO TIPOS E PRODUTOS ---
+        async function carregarTudoDaAPI() {
             try {
+                // 1. LOGIN
                 const loginRes = await fetch('https://didisys-api.onrender.com/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: "client", password: "yP_ddF@s13" })
                 });
-                
                 if (!loginRes.ok) throw new Error("Erro no login");
                 const { accessToken } = await loginRes.json();
 
+                // 2. BUSCAR CATEGORIAS (NOVIDADE!)
+                const typesRes = await fetch('https://didisys-api.onrender.com/products/types', {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+                if (!typesRes.ok) throw new Error("Erro nas categorias");
+                const categoriasDaAPI = await typesRes.json();
+
+                // 3. MONTAR O ESQUELETO BASEADO NAS CATEGORIAS
+                const navContainer = document.getElementById('dynamic-nav');
+                const sectionsContainer = document.getElementById('dynamic-sections');
+                
+                categoriasDaAPI.forEach(cat => {
+                    // Prepara o objeto
+                    const safeKey = cat.nome.replace(/\s+/g, '').toLowerCase();
+                    dynamicMenuData[safeKey] = {
+                        originalName: cat.nome,
+                        displayName: categoryTranslations[cat.nome] || cat.nome,
+                        iconConfig: categoryIcons[cat.nome] || { icon: "ph-star", color: "#d9a23d" },
+                        flavors: []
+                    };
+
+                    // Cria o botao na nav
+                    navContainer.innerHTML += `<button class="filter-btn" onclick="filterMenu('${safeKey}')">${dynamicMenuData[safeKey].displayName}</button>`;
+
+                    // Cria a section
+                    sectionsContainer.innerHTML += `
+                        <section class="menu-section" data-category="${safeKey}" id="sec-${safeKey}" style="display: none;">
+                            <h2 class="section-title"><i class="ph ${dynamicMenuData[safeKey].iconConfig.icon}" style="color:${dynamicMenuData[safeKey].iconConfig.color}"></i> ${dynamicMenuData[safeKey].displayName}</h2>
+                            <div class="product-list" id="list-${safeKey}"></div>
+                        </section>
+                    `;
+                });
+
+                // 4. BUSCAR OS PRODUTOS
                 const prodRes = await fetch('https://didisys-api.onrender.com/products', {
                     headers: { 'Authorization': `Bearer ${accessToken}` }
                 });
-                
                 if (!prodRes.ok) throw new Error("Erro na lista");
                 const produtosDaAPI = await prodRes.json();
 
-                menuData.sobremesas.flavors = [];
-                menuData.suco.flavors = [];
-                menuData.natural.flavors = [];
-                menuData.gourmet.flavors = [];
-                menuData.sorvete.flavors = [];
-
+                // 5. DISTRIBUIR PRODUTOS COM FLAGS E IMAGENS (NOVIDADE!)
                 produtosDaAPI.forEach(produto => {
-                    const item = {
-                        name: produto.nome,
-                        price: produto.preco,
-                        quantidade: produto.quantidade, 
-                        tag: "" 
-                    };
-
-                    const tipoDoJaider = produto.tipo.toLowerCase();
-
-                    if (tipoDoJaider.includes('bolo') || tipoDoJaider.includes('doce') || tipoDoJaider.includes('sobremesa')) {
-                        menuData.sobremesas.flavors.push(item);
-                    } else if (tipoDoJaider.includes('natural') || tipoDoJaider.includes('fruta') || tipoDoJaider.includes('zero lactose')) {
-                        menuData.natural.flavors.push(item);
-                    } else if (tipoDoJaider.includes('gourmet')) {
-                        menuData.gourmet.flavors.push(item);
-                    } else if (tipoDoJaider.includes('sorvete')) {
-                        menuData.sorvete.flavors.push(item);
-                    } else {
-                        menuData.suco.flavors.push(item);
+                    const safeKey = produto.tipo.replace(/\s+/g, '').toLowerCase();
+                    
+                    if (dynamicMenuData[safeKey]) {
+                        dynamicMenuData[safeKey].flavors.push({
+                            id: produto.id,
+                            name: produto.nome,
+                            price: produto.preco,
+                            quantidade: produto.quantidade,
+                            promocao: produto.promocao, // FLAG BOLEANA
+                            novidade: produto.novidade, // FLAG BOLEANA
+                            imagem: produto.imagem // BASE 64
+                        });
                     }
                 });
 
-                // --- ORDENACAO: ESGOTADOS POR ULTIMO ---
-                Object.keys(menuData).forEach(categoria => {
-                    menuData[categoria].flavors.sort((a, b) => {
+                // 6. ORDENACAO INTELIGENTE (ESGOTADOS PARA O FIM)
+                Object.keys(dynamicMenuData).forEach(key => {
+                    dynamicMenuData[key].flavors.sort((a, b) => {
                         const aEsgotado = a.quantidade === 0;
                         const bEsgotado = b.quantidade === 0;
                         if (aEsgotado && !bEsgotado) return 1;
@@ -452,7 +473,13 @@
 
             } catch (error) {
                 console.warn("API Error:", error);
-                renderizarTudo(); 
+                document.getElementById('loading-message').style.display = 'none';
+                document.getElementById('empty-message').style.display = 'block';
+                document.getElementById('empty-message').innerHTML = `
+                    <i class="ph ph-warning-circle" style="font-size: 4rem; color: #EA2027;"></i>
+                    <h3 style="color: var(--text-main); margin-top: 15px;">Sistema indisponível</h3>
+                    <p style="color: var(--text-muted);">Não conseguimos carregar o cardápio agora. Tente novamente em instantes.</p>
+                `;
             }
         }
 
@@ -460,67 +487,71 @@
         function renderizarTudo() {
             document.getElementById('loading-message').style.display = 'none';
 
-            const totalProdutos = menuData.sobremesas.flavors.length + 
-                                  menuData.suco.flavors.length + 
-                                  menuData.natural.flavors.length + 
-                                  menuData.gourmet.flavors.length + 
-                                  menuData.sorvete.flavors.length;
+            let totalProdutos = 0;
+            
+            Object.keys(dynamicMenuData).forEach(key => {
+                totalProdutos += dynamicMenuData[key].flavors.length;
+                renderItems(`list-${key}`, dynamicMenuData[key].flavors, dynamicMenuData[key].displayName, key);
+            });
 
             if (totalProdutos === 0) {
                 document.getElementById('empty-message').style.display = 'block';
             } else {
                 document.getElementById('empty-message').style.display = 'none';
             }
-
-            renderItems('list-sobremesa', menuData.sobremesas, 'Doces & Bolos 🍰');
-            renderItems('list-suco', menuData.suco, 'Geladinho Tradicional 🧊');
-            renderItems('list-natural', menuData.natural, 'Geladinho da Fruta (Zero Lactose) 🍃');
-            renderItems('list-gourmet', menuData.gourmet, 'Geladinho Gourmet 🍫');
-            renderItems('list-sorvete', menuData.sorvete, 'Sorvete Gourmet 🍦');
             
             loadCart(); 
         }
 
-        function renderItems(listId, data, categoryName) {
+        function renderItems(listId, flavors, categoryName, sectionKey) {
             const list = document.getElementById(listId);
-            const section = list.closest('.menu-section');
+            const section = document.getElementById(`sec-${sectionKey}`);
             
-            if (!data.flavors || data.flavors.length === 0) {
+            if (!flavors || flavors.length === 0) {
                 section.style.display = 'none';
                 return;
             } else {
                 section.style.display = 'block';
             }
 
-            list.innerHTML = data.flavors.map(item => {
-                const safeId = item.name.replace(/\s+/g, '-').replace(/[()]/g, '').toLowerCase();
+            list.innerHTML = flavors.map(item => {
+                const safeId = `prod-${item.id}`;
                 let badgeHtml = '';
                 
                 const isEsgotado = item.quantidade === 0;
                 
+                // NOVIDADE: Checando os booleanos diretos da API
                 if (isEsgotado) {
                     badgeHtml = `<span class="badge-tag badge-esgotado">🚫 Esgotado</span>`;
-                } else if (item.tag === 'Mais Vendido') {
-                    badgeHtml = `<span class="badge-tag badge-best">★ Mais Vendido</span>`;
-                } else if (item.tag === 'Novidade') {
+                } else if (item.promocao) {
+                    badgeHtml = `<span class="badge-tag badge-best">★ Promoção</span>`;
+                } else if (item.novidade) {
                     badgeHtml = `<span class="badge-tag badge-new">✨ Novidade</span>`;
                 }
 
-                const itemPrice = item.price !== undefined ? item.price : data.price;
+                // NOVIDADE: Checando se existe Imagem
+                let imgHtml = '';
+                if (item.imagem) {
+                    imgHtml = `
+                    <div class="product-img-wrapper">
+                        <img src="${item.imagem}" alt="${item.name}">
+                    </div>`;
+                }
 
                 const btnPlus = isEsgotado 
                     ? `<button class="qty-btn btn-plus" style="background: #ccc; cursor: not-allowed;" disabled><i class="ph ph-plus"></i></button>`
-                    : `<button class="qty-btn btn-plus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${itemPrice}, 1)"><i class="ph ph-plus"></i></button>`;
+                    : `<button class="qty-btn btn-plus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${item.price}, 1)"><i class="ph ph-plus"></i></button>`;
 
                 return `
                 <div class="product-card ${isEsgotado ? 'esgotado-opaco' : ''}" id="card-${safeId}">
+                    ${imgHtml}
                     <div class="product-info">
                         ${badgeHtml}
                         <h3>${item.name}</h3>
-                        <div class="product-price">R$ ${itemPrice.toFixed(2).replace('.', ',')}</div>
+                        <div class="product-price">R$ ${item.price.toFixed(2).replace('.', ',')}</div>
                     </div>
                     <div class="quantity-controls">
-                        <button class="qty-btn btn-minus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${itemPrice}, -1)" ${isEsgotado ? 'disabled' : ''}><i class="ph ph-minus"></i></button>
+                        <button class="qty-btn btn-minus" onclick="updateQty('${categoryName}', '${item.name}', '${safeId}', ${item.price}, -1)" ${isEsgotado ? 'disabled' : ''}><i class="ph ph-minus"></i></button>
                         <span class="qty-display hidden" id="qty-${safeId}">0</span>
                         ${btnPlus}
                     </div>
@@ -575,8 +606,14 @@
 
                     cart = parsedCart;
                     for (let flavor in cart) {
-                        const safeId = flavor.replace(/\s+/g, '-').replace(/[()]/g, '').toLowerCase();
-                        updateCardVisual(safeId, cart[flavor].qty);
+                        // Busca o ID seguro do elemento no DOM para restaurar o estado visual
+                        const cardElement = Array.from(document.querySelectorAll('.product-card h3'))
+                                                .find(h3 => h3.innerText === flavor)
+                                                ?.closest('.product-card');
+                        if(cardElement) {
+                            const safeId = cardElement.id.replace('card-', '');
+                            updateCardVisual(safeId, cart[flavor].qty);
+                        }
                     }
                     updateOrderBar();
                 } catch (e) {
@@ -643,7 +680,12 @@
                 const item = cart[flavor];
                 const itemTotal = item.qty * item.price;
                 total += itemTotal;
-                const safeId = flavor.replace(/\s+/g, '-').replace(/[()]/g, '').toLowerCase();
+
+                 // Busca o ID seguro
+                 const cardElement = Array.from(document.querySelectorAll('.product-card h3'))
+                                                .find(h3 => h3.innerText === flavor)
+                                                ?.closest('.product-card');
+                const safeId = cardElement ? cardElement.id.replace('card-', '') : '';
 
                 container.innerHTML += `
                     <div class="cart-item">
@@ -654,7 +696,7 @@
                         </div>
                         <div class="quantity-controls" style="background: #f1f2f6; padding: 2px;">
                             <button class="qty-btn btn-minus" onclick="updateQty('${item.category}', '${flavor}', '${safeId}', ${item.price}, -1); renderCartModal()"><i class="ph ph-minus"></i></button>
-                            <span class="qty-display" style="font-size: 1rem; width: 24px;">${item.qty}</span>
+                            <span class="qty-display" style="font-size: 1rem; width: 24px; display:inline-block;">${item.qty}</span>
                             <button class="qty-btn btn-plus" onclick="updateQty('${item.category}', '${flavor}', '${safeId}', ${item.price}, 1); renderCartModal()"><i class="ph ph-plus"></i></button>
                         </div>
                     </div>
@@ -744,7 +786,10 @@
         function filterMenu(category) {
             const sections = document.querySelectorAll('.menu-section');
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            const targetBtn = event ? event.target : document.querySelector(`.filter-btn[onclick="filterMenu('${category}')"]`);
+            if(targetBtn) targetBtn.classList.add('active');
+
             document.getElementById('search-input').value = '';
             
             gsap.to(sections, { opacity: 0, duration: 0.2, onComplete: () => {
