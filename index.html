@@ -88,6 +88,25 @@
         .status-closed .status-dot { background: var(--danger); }
         .status-closed { color: var(--danger); }
 
+        .store-note {
+            display: none;
+            margin-top: -10px;
+            margin-bottom: 18px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: rgba(234, 32, 39, 0.08);
+            border: 1px solid rgba(234, 32, 39, 0.2);
+            color: var(--danger);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+        .store-note.visible { display: block; }
+        .store-note.text {
+            color: var(--text-main);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
         /* --- BUSCA --- */
         .search-container { position: relative; margin-bottom: 20px; }
         .search-input {
@@ -263,6 +282,8 @@
             <div id="store-status" class="status-badge">
                 <span class="status-dot"></span> <span id="status-text">Verificando...</span>
             </div>
+
+            <div id="store-warning" class="store-note">⚠️ Fechado às quartas-feiras.</div>
 
             <div class="search-container">
                 <i class="ph ph-magnifying-glass search-icon"></i>
@@ -745,19 +766,32 @@
         // --- SISTEMA DE HORARIO ---
         function checkOpeningHours() {
             const now = new Date();
-            const spTime = now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" });
-            const currentHour = new Date(spTime).getHours();
-            
+            const spNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+            const currentHour = spNow.getHours();
+            const currentDay = spNow.getDay();
+
             const badge = document.getElementById('store-status');
             const text = document.getElementById('status-text');
-            const isOpen = currentHour >= 12 && currentHour < 20;
+            const warning = document.getElementById('store-warning');
+            const isWednesday = currentDay === 3;
+            const isOpen = !isWednesday && currentHour >= 12 && currentHour < 20;
+
+            badge.classList.remove('status-open', 'status-closed');
 
             if (isOpen) {
                 badge.classList.add('status-open');
                 text.innerText = "Aberto agora";
+                warning.classList.remove('visible');
             } else {
                 badge.classList.add('status-closed');
-                text.innerText = "Fechado (Abre às 12h)";
+
+                if (isWednesday) {
+                    text.innerText = "Fechado hoje";
+                    warning.classList.add('visible');
+                } else {
+                    text.innerText = "Fechado (Abre às 12h)";
+                    warning.classList.remove('visible');
+                }
             }
         }
 
